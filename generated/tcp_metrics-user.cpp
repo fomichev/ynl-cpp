@@ -31,13 +31,20 @@ std::string_view tcp_metrics_op_str(int op)
 /* Policies */
 static std::array<ynl_policy_attr,TCP_METRICS_A_METRICS_MAX + 1> tcp_metrics_metrics_policy = []() {
 	std::array<ynl_policy_attr,TCP_METRICS_A_METRICS_MAX + 1> arr{};
-	arr[TCP_METRICS_A_METRICS_RTT] = { .name = "rtt", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_RTTVAR] = { .name = "rttvar", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_SSTHRESH] = { .name = "ssthresh", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_CWND] = { .name = "cwnd", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_REODERING] = { .name = "reodering", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_RTT_US] = { .name = "rtt-us", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_A_METRICS_RTTVAR_US] = { .name = "rttvar-us", .type = YNL_PT_U32, };
+	arr[TCP_METRICS_A_METRICS_RTT].name = "rtt";
+	arr[TCP_METRICS_A_METRICS_RTT].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_RTTVAR].name = "rttvar";
+	arr[TCP_METRICS_A_METRICS_RTTVAR].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_SSTHRESH].name = "ssthresh";
+	arr[TCP_METRICS_A_METRICS_SSTHRESH].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_CWND].name = "cwnd";
+	arr[TCP_METRICS_A_METRICS_CWND].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_REODERING].name = "reodering";
+	arr[TCP_METRICS_A_METRICS_REODERING].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_RTT_US].name = "rtt-us";
+	arr[TCP_METRICS_A_METRICS_RTT_US].type = YNL_PT_U32;
+	arr[TCP_METRICS_A_METRICS_RTTVAR_US].name = "rttvar-us";
+	arr[TCP_METRICS_A_METRICS_RTTVAR_US].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -48,19 +55,33 @@ struct ynl_policy_nest tcp_metrics_metrics_nest = {
 
 static std::array<ynl_policy_attr,TCP_METRICS_ATTR_MAX + 1> tcp_metrics_policy = []() {
 	std::array<ynl_policy_attr,TCP_METRICS_ATTR_MAX + 1> arr{};
-	arr[TCP_METRICS_ATTR_ADDR_IPV4] = { .name = "addr-ipv4", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_ATTR_ADDR_IPV6] = { .name = "addr-ipv6", .type = YNL_PT_BINARY,};
-	arr[TCP_METRICS_ATTR_AGE] = { .name = "age", .type = YNL_PT_U64, };
-	arr[TCP_METRICS_ATTR_TW_TSVAL] = { .name = "tw-tsval", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_ATTR_TW_TS_STAMP] = { .name = "tw-ts-stamp", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_ATTR_VALS] = { .name = "vals", .type = YNL_PT_NEST, .nest = &tcp_metrics_metrics_nest, };
-	arr[TCP_METRICS_ATTR_FOPEN_MSS] = { .name = "fopen-mss", .type = YNL_PT_U16, };
-	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROPS] = { .name = "fopen-syn-drops", .type = YNL_PT_U16, };
-	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROP_TS] = { .name = "fopen-syn-drop-ts", .type = YNL_PT_U64, };
-	arr[TCP_METRICS_ATTR_FOPEN_COOKIE] = { .name = "fopen-cookie", .type = YNL_PT_BINARY,};
-	arr[TCP_METRICS_ATTR_SADDR_IPV4] = { .name = "saddr-ipv4", .type = YNL_PT_U32, };
-	arr[TCP_METRICS_ATTR_SADDR_IPV6] = { .name = "saddr-ipv6", .type = YNL_PT_BINARY,};
-	arr[TCP_METRICS_ATTR_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, };
+	arr[TCP_METRICS_ATTR_ADDR_IPV4].name = "addr-ipv4";
+	arr[TCP_METRICS_ATTR_ADDR_IPV4].type = YNL_PT_U32;
+	arr[TCP_METRICS_ATTR_ADDR_IPV6].name = "addr-ipv6";
+	arr[TCP_METRICS_ATTR_ADDR_IPV6].type = YNL_PT_BINARY;
+	arr[TCP_METRICS_ATTR_AGE].name = "age";
+	arr[TCP_METRICS_ATTR_AGE].type = YNL_PT_U64;
+	arr[TCP_METRICS_ATTR_TW_TSVAL].name = "tw-tsval";
+	arr[TCP_METRICS_ATTR_TW_TSVAL].type = YNL_PT_U32;
+	arr[TCP_METRICS_ATTR_TW_TS_STAMP].name = "tw-ts-stamp";
+	arr[TCP_METRICS_ATTR_TW_TS_STAMP].type = YNL_PT_U32;
+	arr[TCP_METRICS_ATTR_VALS].name = "vals";
+	arr[TCP_METRICS_ATTR_VALS].type = YNL_PT_NEST;
+	arr[TCP_METRICS_ATTR_VALS].nest = &tcp_metrics_metrics_nest;
+	arr[TCP_METRICS_ATTR_FOPEN_MSS].name = "fopen-mss";
+	arr[TCP_METRICS_ATTR_FOPEN_MSS].type = YNL_PT_U16;
+	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROPS].name = "fopen-syn-drops";
+	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROPS].type = YNL_PT_U16;
+	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROP_TS].name = "fopen-syn-drop-ts";
+	arr[TCP_METRICS_ATTR_FOPEN_SYN_DROP_TS].type = YNL_PT_U64;
+	arr[TCP_METRICS_ATTR_FOPEN_COOKIE].name = "fopen-cookie";
+	arr[TCP_METRICS_ATTR_FOPEN_COOKIE].type = YNL_PT_BINARY;
+	arr[TCP_METRICS_ATTR_SADDR_IPV4].name = "saddr-ipv4";
+	arr[TCP_METRICS_ATTR_SADDR_IPV4].type = YNL_PT_U32;
+	arr[TCP_METRICS_ATTR_SADDR_IPV6].name = "saddr-ipv6";
+	arr[TCP_METRICS_ATTR_SADDR_IPV6].type = YNL_PT_BINARY;
+	arr[TCP_METRICS_ATTR_PAD].name = "pad";
+	arr[TCP_METRICS_ATTR_PAD].type = YNL_PT_IGNORE;
 	return arr;
 } ();
 

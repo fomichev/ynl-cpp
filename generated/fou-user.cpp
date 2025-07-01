@@ -47,18 +47,30 @@ std::string_view fou_encap_type_str(int value)
 /* Policies */
 static std::array<ynl_policy_attr,FOU_ATTR_MAX + 1> fou_policy = []() {
 	std::array<ynl_policy_attr,FOU_ATTR_MAX + 1> arr{};
-	arr[FOU_ATTR_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[FOU_ATTR_PORT] = { .name = "port", .type = YNL_PT_U16, };
-	arr[FOU_ATTR_AF] = { .name = "af", .type = YNL_PT_U8, };
-	arr[FOU_ATTR_IPPROTO] = { .name = "ipproto", .type = YNL_PT_U8, };
-	arr[FOU_ATTR_TYPE] = { .name = "type", .type = YNL_PT_U8, };
-	arr[FOU_ATTR_REMCSUM_NOPARTIAL] = { .name = "remcsum_nopartial", .type = YNL_PT_FLAG, };
-	arr[FOU_ATTR_LOCAL_V4] = { .name = "local_v4", .type = YNL_PT_U32, };
-	arr[FOU_ATTR_LOCAL_V6] = { .name = "local_v6", .type = YNL_PT_BINARY,};
-	arr[FOU_ATTR_PEER_V4] = { .name = "peer_v4", .type = YNL_PT_U32, };
-	arr[FOU_ATTR_PEER_V6] = { .name = "peer_v6", .type = YNL_PT_BINARY,};
-	arr[FOU_ATTR_PEER_PORT] = { .name = "peer_port", .type = YNL_PT_U16, };
-	arr[FOU_ATTR_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
+	arr[FOU_ATTR_UNSPEC].name = "unspec";
+	arr[FOU_ATTR_UNSPEC].type = YNL_PT_REJECT;
+	arr[FOU_ATTR_PORT].name = "port";
+	arr[FOU_ATTR_PORT].type = YNL_PT_U16;
+	arr[FOU_ATTR_AF].name = "af";
+	arr[FOU_ATTR_AF].type = YNL_PT_U8;
+	arr[FOU_ATTR_IPPROTO].name = "ipproto";
+	arr[FOU_ATTR_IPPROTO].type = YNL_PT_U8;
+	arr[FOU_ATTR_TYPE].name = "type";
+	arr[FOU_ATTR_TYPE].type = YNL_PT_U8;
+	arr[FOU_ATTR_REMCSUM_NOPARTIAL].name = "remcsum_nopartial";
+	arr[FOU_ATTR_REMCSUM_NOPARTIAL].type = YNL_PT_FLAG;
+	arr[FOU_ATTR_LOCAL_V4].name = "local_v4";
+	arr[FOU_ATTR_LOCAL_V4].type = YNL_PT_U32;
+	arr[FOU_ATTR_LOCAL_V6].name = "local_v6";
+	arr[FOU_ATTR_LOCAL_V6].type = YNL_PT_BINARY;
+	arr[FOU_ATTR_PEER_V4].name = "peer_v4";
+	arr[FOU_ATTR_PEER_V4].type = YNL_PT_U32;
+	arr[FOU_ATTR_PEER_V6].name = "peer_v6";
+	arr[FOU_ATTR_PEER_V6].type = YNL_PT_BINARY;
+	arr[FOU_ATTR_PEER_PORT].name = "peer_port";
+	arr[FOU_ATTR_PEER_PORT].type = YNL_PT_U16;
+	arr[FOU_ATTR_IFINDEX].name = "ifindex";
+	arr[FOU_ATTR_IFINDEX].type = YNL_PT_U32;
 	return arr;
 } ();
 

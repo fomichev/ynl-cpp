@@ -38,9 +38,12 @@ std::string_view nfsd_op_str(int op)
 /* Policies */
 static std::array<ynl_policy_attr,NFSD_A_VERSION_MAX + 1> nfsd_version_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_VERSION_MAX + 1> arr{};
-	arr[NFSD_A_VERSION_MAJOR] = { .name = "major", .type = YNL_PT_U32, };
-	arr[NFSD_A_VERSION_MINOR] = { .name = "minor", .type = YNL_PT_U32, };
-	arr[NFSD_A_VERSION_ENABLED] = { .name = "enabled", .type = YNL_PT_FLAG, };
+	arr[NFSD_A_VERSION_MAJOR].name = "major";
+	arr[NFSD_A_VERSION_MAJOR].type = YNL_PT_U32;
+	arr[NFSD_A_VERSION_MINOR].name = "minor";
+	arr[NFSD_A_VERSION_MINOR].type = YNL_PT_U32;
+	arr[NFSD_A_VERSION_ENABLED].name = "enabled";
+	arr[NFSD_A_VERSION_ENABLED].type = YNL_PT_FLAG;
 	return arr;
 } ();
 
@@ -51,8 +54,10 @@ struct ynl_policy_nest nfsd_version_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_SOCK_MAX + 1> nfsd_sock_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_SOCK_MAX + 1> arr{};
-	arr[NFSD_A_SOCK_ADDR] = { .name = "addr", .type = YNL_PT_BINARY,};
-	arr[NFSD_A_SOCK_TRANSPORT_NAME] = { .name = "transport-name", .type = YNL_PT_NUL_STR, };
+	arr[NFSD_A_SOCK_ADDR].name = "addr";
+	arr[NFSD_A_SOCK_ADDR].type = YNL_PT_BINARY;
+	arr[NFSD_A_SOCK_TRANSPORT_NAME].name = "transport-name";
+	arr[NFSD_A_SOCK_TRANSPORT_NAME].type  = YNL_PT_NUL_STR;
 	return arr;
 } ();
 
@@ -63,20 +68,34 @@ struct ynl_policy_nest nfsd_sock_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_RPC_STATUS_MAX + 1> nfsd_rpc_status_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_RPC_STATUS_MAX + 1> arr{};
-	arr[NFSD_A_RPC_STATUS_XID] = { .name = "xid", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_FLAGS] = { .name = "flags", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_PROG] = { .name = "prog", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_VERSION] = { .name = "version", .type = YNL_PT_U8, };
-	arr[NFSD_A_RPC_STATUS_PROC] = { .name = "proc", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_SERVICE_TIME] = { .name = "service_time", .type = YNL_PT_U64, };
-	arr[NFSD_A_RPC_STATUS_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, };
-	arr[NFSD_A_RPC_STATUS_SADDR4] = { .name = "saddr4", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_DADDR4] = { .name = "daddr4", .type = YNL_PT_U32, };
-	arr[NFSD_A_RPC_STATUS_SADDR6] = { .name = "saddr6", .type = YNL_PT_BINARY,};
-	arr[NFSD_A_RPC_STATUS_DADDR6] = { .name = "daddr6", .type = YNL_PT_BINARY,};
-	arr[NFSD_A_RPC_STATUS_SPORT] = { .name = "sport", .type = YNL_PT_U16, };
-	arr[NFSD_A_RPC_STATUS_DPORT] = { .name = "dport", .type = YNL_PT_U16, };
-	arr[NFSD_A_RPC_STATUS_COMPOUND_OPS] = { .name = "compound-ops", .type = YNL_PT_U32, };
+	arr[NFSD_A_RPC_STATUS_XID].name = "xid";
+	arr[NFSD_A_RPC_STATUS_XID].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_FLAGS].name = "flags";
+	arr[NFSD_A_RPC_STATUS_FLAGS].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_PROG].name = "prog";
+	arr[NFSD_A_RPC_STATUS_PROG].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_VERSION].name = "version";
+	arr[NFSD_A_RPC_STATUS_VERSION].type = YNL_PT_U8;
+	arr[NFSD_A_RPC_STATUS_PROC].name = "proc";
+	arr[NFSD_A_RPC_STATUS_PROC].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_SERVICE_TIME].name = "service_time";
+	arr[NFSD_A_RPC_STATUS_SERVICE_TIME].type = YNL_PT_U64;
+	arr[NFSD_A_RPC_STATUS_PAD].name = "pad";
+	arr[NFSD_A_RPC_STATUS_PAD].type = YNL_PT_IGNORE;
+	arr[NFSD_A_RPC_STATUS_SADDR4].name = "saddr4";
+	arr[NFSD_A_RPC_STATUS_SADDR4].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_DADDR4].name = "daddr4";
+	arr[NFSD_A_RPC_STATUS_DADDR4].type = YNL_PT_U32;
+	arr[NFSD_A_RPC_STATUS_SADDR6].name = "saddr6";
+	arr[NFSD_A_RPC_STATUS_SADDR6].type = YNL_PT_BINARY;
+	arr[NFSD_A_RPC_STATUS_DADDR6].name = "daddr6";
+	arr[NFSD_A_RPC_STATUS_DADDR6].type = YNL_PT_BINARY;
+	arr[NFSD_A_RPC_STATUS_SPORT].name = "sport";
+	arr[NFSD_A_RPC_STATUS_SPORT].type = YNL_PT_U16;
+	arr[NFSD_A_RPC_STATUS_DPORT].name = "dport";
+	arr[NFSD_A_RPC_STATUS_DPORT].type = YNL_PT_U16;
+	arr[NFSD_A_RPC_STATUS_COMPOUND_OPS].name = "compound-ops";
+	arr[NFSD_A_RPC_STATUS_COMPOUND_OPS].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -87,10 +106,14 @@ struct ynl_policy_nest nfsd_rpc_status_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_SERVER_MAX + 1> nfsd_server_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_SERVER_MAX + 1> arr{};
-	arr[NFSD_A_SERVER_THREADS] = { .name = "threads", .type = YNL_PT_U32, };
-	arr[NFSD_A_SERVER_GRACETIME] = { .name = "gracetime", .type = YNL_PT_U32, };
-	arr[NFSD_A_SERVER_LEASETIME] = { .name = "leasetime", .type = YNL_PT_U32, };
-	arr[NFSD_A_SERVER_SCOPE] = { .name = "scope", .type = YNL_PT_NUL_STR, };
+	arr[NFSD_A_SERVER_THREADS].name = "threads";
+	arr[NFSD_A_SERVER_THREADS].type = YNL_PT_U32;
+	arr[NFSD_A_SERVER_GRACETIME].name = "gracetime";
+	arr[NFSD_A_SERVER_GRACETIME].type = YNL_PT_U32;
+	arr[NFSD_A_SERVER_LEASETIME].name = "leasetime";
+	arr[NFSD_A_SERVER_LEASETIME].type = YNL_PT_U32;
+	arr[NFSD_A_SERVER_SCOPE].name = "scope";
+	arr[NFSD_A_SERVER_SCOPE].type  = YNL_PT_NUL_STR;
 	return arr;
 } ();
 
@@ -101,7 +124,9 @@ struct ynl_policy_nest nfsd_server_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_SERVER_PROTO_MAX + 1> nfsd_server_proto_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_SERVER_PROTO_MAX + 1> arr{};
-	arr[NFSD_A_SERVER_PROTO_VERSION] = { .name = "version", .type = YNL_PT_NEST, .nest = &nfsd_version_nest, };
+	arr[NFSD_A_SERVER_PROTO_VERSION].name = "version";
+	arr[NFSD_A_SERVER_PROTO_VERSION].type = YNL_PT_NEST;
+	arr[NFSD_A_SERVER_PROTO_VERSION].nest = &nfsd_version_nest;
 	return arr;
 } ();
 
@@ -112,7 +137,9 @@ struct ynl_policy_nest nfsd_server_proto_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_SERVER_SOCK_MAX + 1> nfsd_server_sock_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_SERVER_SOCK_MAX + 1> arr{};
-	arr[NFSD_A_SERVER_SOCK_ADDR] = { .name = "addr", .type = YNL_PT_NEST, .nest = &nfsd_sock_nest, };
+	arr[NFSD_A_SERVER_SOCK_ADDR].name = "addr";
+	arr[NFSD_A_SERVER_SOCK_ADDR].type = YNL_PT_NEST;
+	arr[NFSD_A_SERVER_SOCK_ADDR].nest = &nfsd_sock_nest;
 	return arr;
 } ();
 
@@ -123,8 +150,10 @@ struct ynl_policy_nest nfsd_server_sock_nest = {
 
 static std::array<ynl_policy_attr,NFSD_A_POOL_MODE_MAX + 1> nfsd_pool_mode_policy = []() {
 	std::array<ynl_policy_attr,NFSD_A_POOL_MODE_MAX + 1> arr{};
-	arr[NFSD_A_POOL_MODE_MODE] = { .name = "mode", .type = YNL_PT_NUL_STR, };
-	arr[NFSD_A_POOL_MODE_NPOOLS] = { .name = "npools", .type = YNL_PT_U32, };
+	arr[NFSD_A_POOL_MODE_MODE].name = "mode";
+	arr[NFSD_A_POOL_MODE_MODE].type  = YNL_PT_NUL_STR;
+	arr[NFSD_A_POOL_MODE_NPOOLS].name = "npools";
+	arr[NFSD_A_POOL_MODE_NPOOLS].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -208,7 +237,7 @@ int nfsd_sock_parse(struct ynl_parse_arg *yarg, const struct nlattr *nested)
 		} else if (type == NFSD_A_SOCK_TRANSPORT_NAME) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->transport_name.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->transport_name.assign(ynl_attr_get_str(attr));
 		}
 	}
 
@@ -386,7 +415,7 @@ int nfsd_threads_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == NFSD_A_SERVER_SCOPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->scope.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->scope.assign(ynl_attr_get_str(attr));
 		}
 	}
 
@@ -639,7 +668,7 @@ int nfsd_pool_mode_get_rsp_parse(const struct nlmsghdr *nlh,
 		if (type == NFSD_A_POOL_MODE_MODE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->mode.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->mode.assign(ynl_attr_get_str(attr));
 		} else if (type == NFSD_A_POOL_MODE_NPOOLS) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

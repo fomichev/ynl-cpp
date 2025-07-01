@@ -183,8 +183,10 @@ std::string_view dpll_pin_capabilities_str(dpll_pin_capabilities value)
 /* Policies */
 static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_frequency_range_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
-	arr[DPLL_A_PIN_FREQUENCY_MIN] = { .name = "frequency-min", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_FREQUENCY_MAX] = { .name = "frequency-max", .type = YNL_PT_U64, };
+	arr[DPLL_A_PIN_FREQUENCY_MIN].name = "frequency-min";
+	arr[DPLL_A_PIN_FREQUENCY_MIN].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_FREQUENCY_MAX].name = "frequency-max";
+	arr[DPLL_A_PIN_FREQUENCY_MAX].type = YNL_PT_U64;
 	return arr;
 } ();
 
@@ -195,11 +197,16 @@ struct ynl_policy_nest dpll_frequency_range_nest = {
 
 static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_parent_device_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
-	arr[DPLL_A_PIN_PARENT_ID] = { .name = "parent-id", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_DIRECTION] = { .name = "direction", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PRIO] = { .name = "prio", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_STATE] = { .name = "state", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PHASE_OFFSET] = { .name = "phase-offset", .type = YNL_PT_U64, };
+	arr[DPLL_A_PIN_PARENT_ID].name = "parent-id";
+	arr[DPLL_A_PIN_PARENT_ID].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_DIRECTION].name = "direction";
+	arr[DPLL_A_PIN_DIRECTION].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PRIO].name = "prio";
+	arr[DPLL_A_PIN_PRIO].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_STATE].name = "state";
+	arr[DPLL_A_PIN_STATE].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PHASE_OFFSET].name = "phase-offset";
+	arr[DPLL_A_PIN_PHASE_OFFSET].type = YNL_PT_U64;
 	return arr;
 } ();
 
@@ -210,8 +217,10 @@ struct ynl_policy_nest dpll_pin_parent_device_nest = {
 
 static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_parent_pin_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
-	arr[DPLL_A_PIN_PARENT_ID] = { .name = "parent-id", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_STATE] = { .name = "state", .type = YNL_PT_U32, };
+	arr[DPLL_A_PIN_PARENT_ID].name = "parent-id";
+	arr[DPLL_A_PIN_PARENT_ID].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_STATE].name = "state";
+	arr[DPLL_A_PIN_STATE].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -222,17 +231,28 @@ struct ynl_policy_nest dpll_pin_parent_pin_nest = {
 
 static std::array<ynl_policy_attr,DPLL_A_MAX + 1> dpll_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_MAX + 1> arr{};
-	arr[DPLL_A_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[DPLL_A_MODULE_NAME] = { .name = "module-name", .type = YNL_PT_NUL_STR, };
-	arr[DPLL_A_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, };
-	arr[DPLL_A_CLOCK_ID] = { .name = "clock-id", .type = YNL_PT_U64, };
-	arr[DPLL_A_MODE] = { .name = "mode", .type = YNL_PT_U32, };
-	arr[DPLL_A_MODE_SUPPORTED] = { .name = "mode-supported", .type = YNL_PT_U32, };
-	arr[DPLL_A_LOCK_STATUS] = { .name = "lock-status", .type = YNL_PT_U32, };
-	arr[DPLL_A_TEMP] = { .name = "temp", .type = YNL_PT_U32, };
-	arr[DPLL_A_TYPE] = { .name = "type", .type = YNL_PT_U32, };
-	arr[DPLL_A_LOCK_STATUS_ERROR] = { .name = "lock-status-error", .type = YNL_PT_U32, };
-	arr[DPLL_A_CLOCK_QUALITY_LEVEL] = { .name = "clock-quality-level", .type = YNL_PT_U32, };
+	arr[DPLL_A_ID].name = "id";
+	arr[DPLL_A_ID].type = YNL_PT_U32;
+	arr[DPLL_A_MODULE_NAME].name = "module-name";
+	arr[DPLL_A_MODULE_NAME].type  = YNL_PT_NUL_STR;
+	arr[DPLL_A_PAD].name = "pad";
+	arr[DPLL_A_PAD].type = YNL_PT_IGNORE;
+	arr[DPLL_A_CLOCK_ID].name = "clock-id";
+	arr[DPLL_A_CLOCK_ID].type = YNL_PT_U64;
+	arr[DPLL_A_MODE].name = "mode";
+	arr[DPLL_A_MODE].type = YNL_PT_U32;
+	arr[DPLL_A_MODE_SUPPORTED].name = "mode-supported";
+	arr[DPLL_A_MODE_SUPPORTED].type = YNL_PT_U32;
+	arr[DPLL_A_LOCK_STATUS].name = "lock-status";
+	arr[DPLL_A_LOCK_STATUS].type = YNL_PT_U32;
+	arr[DPLL_A_TEMP].name = "temp";
+	arr[DPLL_A_TEMP].type = YNL_PT_U32;
+	arr[DPLL_A_TYPE].name = "type";
+	arr[DPLL_A_TYPE].type = YNL_PT_U32;
+	arr[DPLL_A_LOCK_STATUS_ERROR].name = "lock-status-error";
+	arr[DPLL_A_LOCK_STATUS_ERROR].type = YNL_PT_U32;
+	arr[DPLL_A_CLOCK_QUALITY_LEVEL].name = "clock-quality-level";
+	arr[DPLL_A_CLOCK_QUALITY_LEVEL].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -243,33 +263,64 @@ struct ynl_policy_nest dpll_nest = {
 
 static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
-	arr[DPLL_A_PIN_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PARENT_ID] = { .name = "parent-id", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_MODULE_NAME] = { .name = "module-name", .type = YNL_PT_NUL_STR, };
-	arr[DPLL_A_PIN_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, };
-	arr[DPLL_A_PIN_CLOCK_ID] = { .name = "clock-id", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_BOARD_LABEL] = { .name = "board-label", .type = YNL_PT_NUL_STR, };
-	arr[DPLL_A_PIN_PANEL_LABEL] = { .name = "panel-label", .type = YNL_PT_NUL_STR, };
-	arr[DPLL_A_PIN_PACKAGE_LABEL] = { .name = "package-label", .type = YNL_PT_NUL_STR, };
-	arr[DPLL_A_PIN_TYPE] = { .name = "type", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_DIRECTION] = { .name = "direction", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_FREQUENCY] = { .name = "frequency", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_FREQUENCY_SUPPORTED] = { .name = "frequency-supported", .type = YNL_PT_NEST, .nest = &dpll_frequency_range_nest, };
-	arr[DPLL_A_PIN_FREQUENCY_MIN] = { .name = "frequency-min", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_FREQUENCY_MAX] = { .name = "frequency-max", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_PRIO] = { .name = "prio", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_STATE] = { .name = "state", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_CAPABILITIES] = { .name = "capabilities", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PARENT_DEVICE] = { .name = "parent-device", .type = YNL_PT_NEST, .nest = &dpll_pin_parent_device_nest, };
-	arr[DPLL_A_PIN_PARENT_PIN] = { .name = "parent-pin", .type = YNL_PT_NEST, .nest = &dpll_pin_parent_pin_nest, };
-	arr[DPLL_A_PIN_PHASE_ADJUST_MIN] = { .name = "phase-adjust-min", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PHASE_ADJUST_MAX] = { .name = "phase-adjust-max", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PHASE_ADJUST] = { .name = "phase-adjust", .type = YNL_PT_U32, };
-	arr[DPLL_A_PIN_PHASE_OFFSET] = { .name = "phase-offset", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET] = { .name = "fractional-frequency-offset", .type = YNL_PT_UINT, };
-	arr[DPLL_A_PIN_ESYNC_FREQUENCY] = { .name = "esync-frequency", .type = YNL_PT_U64, };
-	arr[DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED] = { .name = "esync-frequency-supported", .type = YNL_PT_NEST, .nest = &dpll_frequency_range_nest, };
-	arr[DPLL_A_PIN_ESYNC_PULSE] = { .name = "esync-pulse", .type = YNL_PT_U32, };
+	arr[DPLL_A_PIN_ID].name = "id";
+	arr[DPLL_A_PIN_ID].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PARENT_ID].name = "parent-id";
+	arr[DPLL_A_PIN_PARENT_ID].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_MODULE_NAME].name = "module-name";
+	arr[DPLL_A_PIN_MODULE_NAME].type  = YNL_PT_NUL_STR;
+	arr[DPLL_A_PIN_PAD].name = "pad";
+	arr[DPLL_A_PIN_PAD].type = YNL_PT_IGNORE;
+	arr[DPLL_A_PIN_CLOCK_ID].name = "clock-id";
+	arr[DPLL_A_PIN_CLOCK_ID].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_BOARD_LABEL].name = "board-label";
+	arr[DPLL_A_PIN_BOARD_LABEL].type  = YNL_PT_NUL_STR;
+	arr[DPLL_A_PIN_PANEL_LABEL].name = "panel-label";
+	arr[DPLL_A_PIN_PANEL_LABEL].type  = YNL_PT_NUL_STR;
+	arr[DPLL_A_PIN_PACKAGE_LABEL].name = "package-label";
+	arr[DPLL_A_PIN_PACKAGE_LABEL].type  = YNL_PT_NUL_STR;
+	arr[DPLL_A_PIN_TYPE].name = "type";
+	arr[DPLL_A_PIN_TYPE].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_DIRECTION].name = "direction";
+	arr[DPLL_A_PIN_DIRECTION].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_FREQUENCY].name = "frequency";
+	arr[DPLL_A_PIN_FREQUENCY].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_FREQUENCY_SUPPORTED].name = "frequency-supported";
+	arr[DPLL_A_PIN_FREQUENCY_SUPPORTED].type = YNL_PT_NEST;
+	arr[DPLL_A_PIN_FREQUENCY_SUPPORTED].nest = &dpll_frequency_range_nest;
+	arr[DPLL_A_PIN_FREQUENCY_MIN].name = "frequency-min";
+	arr[DPLL_A_PIN_FREQUENCY_MIN].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_FREQUENCY_MAX].name = "frequency-max";
+	arr[DPLL_A_PIN_FREQUENCY_MAX].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_PRIO].name = "prio";
+	arr[DPLL_A_PIN_PRIO].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_STATE].name = "state";
+	arr[DPLL_A_PIN_STATE].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_CAPABILITIES].name = "capabilities";
+	arr[DPLL_A_PIN_CAPABILITIES].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PARENT_DEVICE].name = "parent-device";
+	arr[DPLL_A_PIN_PARENT_DEVICE].type = YNL_PT_NEST;
+	arr[DPLL_A_PIN_PARENT_DEVICE].nest = &dpll_pin_parent_device_nest;
+	arr[DPLL_A_PIN_PARENT_PIN].name = "parent-pin";
+	arr[DPLL_A_PIN_PARENT_PIN].type = YNL_PT_NEST;
+	arr[DPLL_A_PIN_PARENT_PIN].nest = &dpll_pin_parent_pin_nest;
+	arr[DPLL_A_PIN_PHASE_ADJUST_MIN].name = "phase-adjust-min";
+	arr[DPLL_A_PIN_PHASE_ADJUST_MIN].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PHASE_ADJUST_MAX].name = "phase-adjust-max";
+	arr[DPLL_A_PIN_PHASE_ADJUST_MAX].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PHASE_ADJUST].name = "phase-adjust";
+	arr[DPLL_A_PIN_PHASE_ADJUST].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_PHASE_OFFSET].name = "phase-offset";
+	arr[DPLL_A_PIN_PHASE_OFFSET].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET].name = "fractional-frequency-offset";
+	arr[DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET].type = YNL_PT_UINT;
+	arr[DPLL_A_PIN_ESYNC_FREQUENCY].name = "esync-frequency";
+	arr[DPLL_A_PIN_ESYNC_FREQUENCY].type = YNL_PT_U64;
+	arr[DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED].name = "esync-frequency-supported";
+	arr[DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED].type = YNL_PT_NEST;
+	arr[DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED].nest = &dpll_frequency_range_nest;
+	arr[DPLL_A_PIN_ESYNC_PULSE].name = "esync-pulse";
+	arr[DPLL_A_PIN_ESYNC_PULSE].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -475,7 +526,7 @@ int dpll_device_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == DPLL_A_MODULE_NAME) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->module_name.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->module_name.assign(ynl_attr_get_str(attr));
 		} else if (type == DPLL_A_MODE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -689,15 +740,15 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == DPLL_A_PIN_BOARD_LABEL) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->board_label.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->board_label.assign(ynl_attr_get_str(attr));
 		} else if (type == DPLL_A_PIN_PANEL_LABEL) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->panel_label.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->panel_label.assign(ynl_attr_get_str(attr));
 		} else if (type == DPLL_A_PIN_PACKAGE_LABEL) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->package_label.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->package_label.assign(ynl_attr_get_str(attr));
 		} else if (type == DPLL_A_PIN_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

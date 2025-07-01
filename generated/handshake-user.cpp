@@ -78,8 +78,10 @@ std::string_view handshake_auth_str(handshake_auth value)
 /* Policies */
 static std::array<ynl_policy_attr,HANDSHAKE_A_X509_MAX + 1> handshake_x509_policy = []() {
 	std::array<ynl_policy_attr,HANDSHAKE_A_X509_MAX + 1> arr{};
-	arr[HANDSHAKE_A_X509_CERT] = { .name = "cert", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_X509_PRIVKEY] = { .name = "privkey", .type = YNL_PT_U32, };
+	arr[HANDSHAKE_A_X509_CERT].name = "cert";
+	arr[HANDSHAKE_A_X509_CERT].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_X509_PRIVKEY].name = "privkey";
+	arr[HANDSHAKE_A_X509_PRIVKEY].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -90,14 +92,23 @@ struct ynl_policy_nest handshake_x509_nest = {
 
 static std::array<ynl_policy_attr,HANDSHAKE_A_ACCEPT_MAX + 1> handshake_accept_policy = []() {
 	std::array<ynl_policy_attr,HANDSHAKE_A_ACCEPT_MAX + 1> arr{};
-	arr[HANDSHAKE_A_ACCEPT_SOCKFD] = { .name = "sockfd", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_HANDLER_CLASS] = { .name = "handler-class", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_MESSAGE_TYPE] = { .name = "message-type", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_TIMEOUT] = { .name = "timeout", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_AUTH_MODE] = { .name = "auth-mode", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_PEER_IDENTITY] = { .name = "peer-identity", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_ACCEPT_CERTIFICATE] = { .name = "certificate", .type = YNL_PT_NEST, .nest = &handshake_x509_nest, };
-	arr[HANDSHAKE_A_ACCEPT_PEERNAME] = { .name = "peername", .type = YNL_PT_NUL_STR, };
+	arr[HANDSHAKE_A_ACCEPT_SOCKFD].name = "sockfd";
+	arr[HANDSHAKE_A_ACCEPT_SOCKFD].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_HANDLER_CLASS].name = "handler-class";
+	arr[HANDSHAKE_A_ACCEPT_HANDLER_CLASS].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_MESSAGE_TYPE].name = "message-type";
+	arr[HANDSHAKE_A_ACCEPT_MESSAGE_TYPE].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_TIMEOUT].name = "timeout";
+	arr[HANDSHAKE_A_ACCEPT_TIMEOUT].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_AUTH_MODE].name = "auth-mode";
+	arr[HANDSHAKE_A_ACCEPT_AUTH_MODE].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_PEER_IDENTITY].name = "peer-identity";
+	arr[HANDSHAKE_A_ACCEPT_PEER_IDENTITY].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_ACCEPT_CERTIFICATE].name = "certificate";
+	arr[HANDSHAKE_A_ACCEPT_CERTIFICATE].type = YNL_PT_NEST;
+	arr[HANDSHAKE_A_ACCEPT_CERTIFICATE].nest = &handshake_x509_nest;
+	arr[HANDSHAKE_A_ACCEPT_PEERNAME].name = "peername";
+	arr[HANDSHAKE_A_ACCEPT_PEERNAME].type  = YNL_PT_NUL_STR;
 	return arr;
 } ();
 
@@ -108,9 +119,12 @@ struct ynl_policy_nest handshake_accept_nest = {
 
 static std::array<ynl_policy_attr,HANDSHAKE_A_DONE_MAX + 1> handshake_done_policy = []() {
 	std::array<ynl_policy_attr,HANDSHAKE_A_DONE_MAX + 1> arr{};
-	arr[HANDSHAKE_A_DONE_STATUS] = { .name = "status", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_DONE_SOCKFD] = { .name = "sockfd", .type = YNL_PT_U32, };
-	arr[HANDSHAKE_A_DONE_REMOTE_AUTH] = { .name = "remote-auth", .type = YNL_PT_U32, };
+	arr[HANDSHAKE_A_DONE_STATUS].name = "status";
+	arr[HANDSHAKE_A_DONE_STATUS].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_DONE_SOCKFD].name = "sockfd";
+	arr[HANDSHAKE_A_DONE_SOCKFD].type = YNL_PT_U32;
+	arr[HANDSHAKE_A_DONE_REMOTE_AUTH].name = "remote-auth";
+	arr[HANDSHAKE_A_DONE_REMOTE_AUTH].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -189,7 +203,7 @@ int handshake_accept_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == HANDSHAKE_A_ACCEPT_PEERNAME) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->peername.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->peername.assign(ynl_attr_get_str(attr));
 		}
 	}
 

@@ -63,14 +63,22 @@ std::string_view mptcp_pm_event_type_str(mptcp_event_type value)
 /* Policies */
 static std::array<ynl_policy_attr,MPTCP_PM_ADDR_ATTR_MAX + 1> mptcp_pm_address_policy = []() {
 	std::array<ynl_policy_attr,MPTCP_PM_ADDR_ATTR_MAX + 1> arr{};
-	arr[MPTCP_PM_ADDR_ATTR_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[MPTCP_PM_ADDR_ATTR_FAMILY] = { .name = "family", .type = YNL_PT_U16, };
-	arr[MPTCP_PM_ADDR_ATTR_ID] = { .name = "id", .type = YNL_PT_U8, };
-	arr[MPTCP_PM_ADDR_ATTR_ADDR4] = { .name = "addr4", .type = YNL_PT_U32, };
-	arr[MPTCP_PM_ADDR_ATTR_ADDR6] = { .name = "addr6", .type = YNL_PT_BINARY,};
-	arr[MPTCP_PM_ADDR_ATTR_PORT] = { .name = "port", .type = YNL_PT_U16, };
-	arr[MPTCP_PM_ADDR_ATTR_FLAGS] = { .name = "flags", .type = YNL_PT_U32, };
-	arr[MPTCP_PM_ADDR_ATTR_IF_IDX] = { .name = "if-idx", .type = YNL_PT_U32, };
+	arr[MPTCP_PM_ADDR_ATTR_UNSPEC].name = "unspec";
+	arr[MPTCP_PM_ADDR_ATTR_UNSPEC].type = YNL_PT_REJECT;
+	arr[MPTCP_PM_ADDR_ATTR_FAMILY].name = "family";
+	arr[MPTCP_PM_ADDR_ATTR_FAMILY].type = YNL_PT_U16;
+	arr[MPTCP_PM_ADDR_ATTR_ID].name = "id";
+	arr[MPTCP_PM_ADDR_ATTR_ID].type = YNL_PT_U8;
+	arr[MPTCP_PM_ADDR_ATTR_ADDR4].name = "addr4";
+	arr[MPTCP_PM_ADDR_ATTR_ADDR4].type = YNL_PT_U32;
+	arr[MPTCP_PM_ADDR_ATTR_ADDR6].name = "addr6";
+	arr[MPTCP_PM_ADDR_ATTR_ADDR6].type = YNL_PT_BINARY;
+	arr[MPTCP_PM_ADDR_ATTR_PORT].name = "port";
+	arr[MPTCP_PM_ADDR_ATTR_PORT].type = YNL_PT_U16;
+	arr[MPTCP_PM_ADDR_ATTR_FLAGS].name = "flags";
+	arr[MPTCP_PM_ADDR_ATTR_FLAGS].type = YNL_PT_U32;
+	arr[MPTCP_PM_ADDR_ATTR_IF_IDX].name = "if-idx";
+	arr[MPTCP_PM_ADDR_ATTR_IF_IDX].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -81,7 +89,9 @@ struct ynl_policy_nest mptcp_pm_address_nest = {
 
 static std::array<ynl_policy_attr,MPTCP_PM_ENDPOINT_MAX + 1> mptcp_pm_endpoint_policy = []() {
 	std::array<ynl_policy_attr,MPTCP_PM_ENDPOINT_MAX + 1> arr{};
-	arr[MPTCP_PM_ENDPOINT_ADDR] = { .name = "addr", .type = YNL_PT_NEST, .nest = &mptcp_pm_address_nest, };
+	arr[MPTCP_PM_ENDPOINT_ADDR].name = "addr";
+	arr[MPTCP_PM_ENDPOINT_ADDR].type = YNL_PT_NEST;
+	arr[MPTCP_PM_ENDPOINT_ADDR].nest = &mptcp_pm_address_nest;
 	return arr;
 } ();
 
@@ -92,13 +102,22 @@ struct ynl_policy_nest mptcp_pm_endpoint_nest = {
 
 static std::array<ynl_policy_attr,MPTCP_PM_ATTR_MAX + 1> mptcp_pm_attr_policy = []() {
 	std::array<ynl_policy_attr,MPTCP_PM_ATTR_MAX + 1> arr{};
-	arr[MPTCP_PM_ATTR_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[MPTCP_PM_ATTR_ADDR] = { .name = "addr", .type = YNL_PT_NEST, .nest = &mptcp_pm_address_nest, };
-	arr[MPTCP_PM_ATTR_RCV_ADD_ADDRS] = { .name = "rcv-add-addrs", .type = YNL_PT_U32, };
-	arr[MPTCP_PM_ATTR_SUBFLOWS] = { .name = "subflows", .type = YNL_PT_U32, };
-	arr[MPTCP_PM_ATTR_TOKEN] = { .name = "token", .type = YNL_PT_U32, };
-	arr[MPTCP_PM_ATTR_LOC_ID] = { .name = "loc-id", .type = YNL_PT_U8, };
-	arr[MPTCP_PM_ATTR_ADDR_REMOTE] = { .name = "addr-remote", .type = YNL_PT_NEST, .nest = &mptcp_pm_address_nest, };
+	arr[MPTCP_PM_ATTR_UNSPEC].name = "unspec";
+	arr[MPTCP_PM_ATTR_UNSPEC].type = YNL_PT_REJECT;
+	arr[MPTCP_PM_ATTR_ADDR].name = "addr";
+	arr[MPTCP_PM_ATTR_ADDR].type = YNL_PT_NEST;
+	arr[MPTCP_PM_ATTR_ADDR].nest = &mptcp_pm_address_nest;
+	arr[MPTCP_PM_ATTR_RCV_ADD_ADDRS].name = "rcv-add-addrs";
+	arr[MPTCP_PM_ATTR_RCV_ADD_ADDRS].type = YNL_PT_U32;
+	arr[MPTCP_PM_ATTR_SUBFLOWS].name = "subflows";
+	arr[MPTCP_PM_ATTR_SUBFLOWS].type = YNL_PT_U32;
+	arr[MPTCP_PM_ATTR_TOKEN].name = "token";
+	arr[MPTCP_PM_ATTR_TOKEN].type = YNL_PT_U32;
+	arr[MPTCP_PM_ATTR_LOC_ID].name = "loc-id";
+	arr[MPTCP_PM_ATTR_LOC_ID].type = YNL_PT_U8;
+	arr[MPTCP_PM_ATTR_ADDR_REMOTE].name = "addr-remote";
+	arr[MPTCP_PM_ATTR_ADDR_REMOTE].type = YNL_PT_NEST;
+	arr[MPTCP_PM_ATTR_ADDR_REMOTE].nest = &mptcp_pm_address_nest;
 	return arr;
 } ();
 

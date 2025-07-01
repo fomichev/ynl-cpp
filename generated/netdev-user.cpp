@@ -122,8 +122,10 @@ std::string_view netdev_qstats_scope_str(netdev_qstats_scope value)
 /* Policies */
 static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> netdev_page_pool_info_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> arr{};
-	arr[NETDEV_A_PAGE_POOL_ID] = { .name = "id", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
+	arr[NETDEV_A_PAGE_POOL_ID].name = "id";
+	arr[NETDEV_A_PAGE_POOL_ID].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_PAGE_POOL_IFINDEX].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -134,8 +136,10 @@ struct ynl_policy_nest netdev_page_pool_info_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> netdev_queue_id_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> arr{};
-	arr[NETDEV_A_QUEUE_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QUEUE_TYPE] = { .name = "type", .type = YNL_PT_U32, };
+	arr[NETDEV_A_QUEUE_ID].name = "id";
+	arr[NETDEV_A_QUEUE_ID].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_TYPE].name = "type";
+	arr[NETDEV_A_QUEUE_TYPE].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -146,12 +150,18 @@ struct ynl_policy_nest netdev_queue_id_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_DEV_MAX + 1> netdev_dev_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_DEV_MAX + 1> arr{};
-	arr[NETDEV_A_DEV_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_DEV_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, };
-	arr[NETDEV_A_DEV_XDP_FEATURES] = { .name = "xdp-features", .type = YNL_PT_U64, };
-	arr[NETDEV_A_DEV_XDP_ZC_MAX_SEGS] = { .name = "xdp-zc-max-segs", .type = YNL_PT_U32, };
-	arr[NETDEV_A_DEV_XDP_RX_METADATA_FEATURES] = { .name = "xdp-rx-metadata-features", .type = YNL_PT_U64, };
-	arr[NETDEV_A_DEV_XSK_FEATURES] = { .name = "xsk-features", .type = YNL_PT_U64, };
+	arr[NETDEV_A_DEV_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_DEV_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_DEV_PAD].name = "pad";
+	arr[NETDEV_A_DEV_PAD].type = YNL_PT_IGNORE;
+	arr[NETDEV_A_DEV_XDP_FEATURES].name = "xdp-features";
+	arr[NETDEV_A_DEV_XDP_FEATURES].type = YNL_PT_U64;
+	arr[NETDEV_A_DEV_XDP_ZC_MAX_SEGS].name = "xdp-zc-max-segs";
+	arr[NETDEV_A_DEV_XDP_ZC_MAX_SEGS].type = YNL_PT_U32;
+	arr[NETDEV_A_DEV_XDP_RX_METADATA_FEATURES].name = "xdp-rx-metadata-features";
+	arr[NETDEV_A_DEV_XDP_RX_METADATA_FEATURES].type = YNL_PT_U64;
+	arr[NETDEV_A_DEV_XSK_FEATURES].name = "xsk-features";
+	arr[NETDEV_A_DEV_XSK_FEATURES].type = YNL_PT_U64;
 	return arr;
 } ();
 
@@ -162,13 +172,20 @@ struct ynl_policy_nest netdev_dev_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> netdev_page_pool_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> arr{};
-	arr[NETDEV_A_PAGE_POOL_ID] = { .name = "id", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_PAGE_POOL_NAPI_ID] = { .name = "napi-id", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_INFLIGHT] = { .name = "inflight", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_INFLIGHT_MEM] = { .name = "inflight-mem", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_DETACH_TIME] = { .name = "detach-time", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_DMABUF] = { .name = "dmabuf", .type = YNL_PT_U32, };
+	arr[NETDEV_A_PAGE_POOL_ID].name = "id";
+	arr[NETDEV_A_PAGE_POOL_ID].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_PAGE_POOL_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_PAGE_POOL_NAPI_ID].name = "napi-id";
+	arr[NETDEV_A_PAGE_POOL_NAPI_ID].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_INFLIGHT].name = "inflight";
+	arr[NETDEV_A_PAGE_POOL_INFLIGHT].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_INFLIGHT_MEM].name = "inflight-mem";
+	arr[NETDEV_A_PAGE_POOL_INFLIGHT_MEM].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_DETACH_TIME].name = "detach-time";
+	arr[NETDEV_A_PAGE_POOL_DETACH_TIME].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_DMABUF].name = "dmabuf";
+	arr[NETDEV_A_PAGE_POOL_DMABUF].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -179,18 +196,31 @@ struct ynl_policy_nest netdev_page_pool_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_STATS_MAX + 1> netdev_page_pool_stats_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_STATS_MAX + 1> arr{};
-	arr[NETDEV_A_PAGE_POOL_STATS_INFO] = { .name = "info", .type = YNL_PT_NEST, .nest = &netdev_page_pool_info_nest, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_FAST] = { .name = "alloc-fast", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW] = { .name = "alloc-slow", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW_HIGH_ORDER] = { .name = "alloc-slow-high-order", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_EMPTY] = { .name = "alloc-empty", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_REFILL] = { .name = "alloc-refill", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_WAIVE] = { .name = "alloc-waive", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHED] = { .name = "recycle-cached", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHE_FULL] = { .name = "recycle-cache-full", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING] = { .name = "recycle-ring", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING_FULL] = { .name = "recycle-ring-full", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RELEASED_REFCNT] = { .name = "recycle-released-refcnt", .type = YNL_PT_UINT, };
+	arr[NETDEV_A_PAGE_POOL_STATS_INFO].name = "info";
+	arr[NETDEV_A_PAGE_POOL_STATS_INFO].type = YNL_PT_NEST;
+	arr[NETDEV_A_PAGE_POOL_STATS_INFO].nest = &netdev_page_pool_info_nest;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_FAST].name = "alloc-fast";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_FAST].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW].name = "alloc-slow";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW_HIGH_ORDER].name = "alloc-slow-high-order";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_SLOW_HIGH_ORDER].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_EMPTY].name = "alloc-empty";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_EMPTY].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_REFILL].name = "alloc-refill";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_REFILL].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_WAIVE].name = "alloc-waive";
+	arr[NETDEV_A_PAGE_POOL_STATS_ALLOC_WAIVE].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHED].name = "recycle-cached";
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHED].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHE_FULL].name = "recycle-cache-full";
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_CACHE_FULL].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING].name = "recycle-ring";
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING_FULL].name = "recycle-ring-full";
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RING_FULL].type = YNL_PT_UINT;
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RELEASED_REFCNT].name = "recycle-released-refcnt";
+	arr[NETDEV_A_PAGE_POOL_STATS_RECYCLE_RELEASED_REFCNT].type = YNL_PT_UINT;
 	return arr;
 } ();
 
@@ -201,11 +231,16 @@ struct ynl_policy_nest netdev_page_pool_stats_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> netdev_queue_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> arr{};
-	arr[NETDEV_A_QUEUE_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QUEUE_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QUEUE_TYPE] = { .name = "type", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QUEUE_NAPI_ID] = { .name = "napi-id", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QUEUE_DMABUF] = { .name = "dmabuf", .type = YNL_PT_U32, };
+	arr[NETDEV_A_QUEUE_ID].name = "id";
+	arr[NETDEV_A_QUEUE_ID].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_QUEUE_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_TYPE].name = "type";
+	arr[NETDEV_A_QUEUE_TYPE].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_NAPI_ID].name = "napi-id";
+	arr[NETDEV_A_QUEUE_NAPI_ID].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_DMABUF].name = "dmabuf";
+	arr[NETDEV_A_QUEUE_DMABUF].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -216,13 +251,20 @@ struct ynl_policy_nest netdev_queue_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_NAPI_MAX + 1> netdev_napi_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_NAPI_MAX + 1> arr{};
-	arr[NETDEV_A_NAPI_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_NAPI_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[NETDEV_A_NAPI_IRQ] = { .name = "irq", .type = YNL_PT_U32, };
-	arr[NETDEV_A_NAPI_PID] = { .name = "pid", .type = YNL_PT_U32, };
-	arr[NETDEV_A_NAPI_DEFER_HARD_IRQS] = { .name = "defer-hard-irqs", .type = YNL_PT_U32, };
-	arr[NETDEV_A_NAPI_GRO_FLUSH_TIMEOUT] = { .name = "gro-flush-timeout", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT] = { .name = "irq-suspend-timeout", .type = YNL_PT_UINT, };
+	arr[NETDEV_A_NAPI_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_NAPI_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_NAPI_ID].name = "id";
+	arr[NETDEV_A_NAPI_ID].type = YNL_PT_U32;
+	arr[NETDEV_A_NAPI_IRQ].name = "irq";
+	arr[NETDEV_A_NAPI_IRQ].type = YNL_PT_U32;
+	arr[NETDEV_A_NAPI_PID].name = "pid";
+	arr[NETDEV_A_NAPI_PID].type = YNL_PT_U32;
+	arr[NETDEV_A_NAPI_DEFER_HARD_IRQS].name = "defer-hard-irqs";
+	arr[NETDEV_A_NAPI_DEFER_HARD_IRQS].type = YNL_PT_U32;
+	arr[NETDEV_A_NAPI_GRO_FLUSH_TIMEOUT].name = "gro-flush-timeout";
+	arr[NETDEV_A_NAPI_GRO_FLUSH_TIMEOUT].type = YNL_PT_UINT;
+	arr[NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT].name = "irq-suspend-timeout";
+	arr[NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT].type = YNL_PT_UINT;
 	return arr;
 } ();
 
@@ -233,37 +275,68 @@ struct ynl_policy_nest netdev_napi_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_QSTATS_MAX + 1> netdev_qstats_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_QSTATS_MAX + 1> arr{};
-	arr[NETDEV_A_QSTATS_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QSTATS_QUEUE_TYPE] = { .name = "queue-type", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QSTATS_QUEUE_ID] = { .name = "queue-id", .type = YNL_PT_U32, };
-	arr[NETDEV_A_QSTATS_SCOPE] = { .name = "scope", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_PACKETS] = { .name = "rx-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_BYTES] = { .name = "rx-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_PACKETS] = { .name = "tx-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_BYTES] = { .name = "tx-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_ALLOC_FAIL] = { .name = "rx-alloc-fail", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_DROPS] = { .name = "rx-hw-drops", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_DROP_OVERRUNS] = { .name = "rx-hw-drop-overruns", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_CSUM_COMPLETE] = { .name = "rx-csum-complete", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_CSUM_UNNECESSARY] = { .name = "rx-csum-unnecessary", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_CSUM_NONE] = { .name = "rx-csum-none", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_CSUM_BAD] = { .name = "rx-csum-bad", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_GRO_PACKETS] = { .name = "rx-hw-gro-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_GRO_BYTES] = { .name = "rx-hw-gro-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_PACKETS] = { .name = "rx-hw-gro-wire-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_BYTES] = { .name = "rx-hw-gro-wire-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_RX_HW_DROP_RATELIMITS] = { .name = "rx-hw-drop-ratelimits", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_DROPS] = { .name = "tx-hw-drops", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_DROP_ERRORS] = { .name = "tx-hw-drop-errors", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_CSUM_NONE] = { .name = "tx-csum-none", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_NEEDS_CSUM] = { .name = "tx-needs-csum", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_GSO_PACKETS] = { .name = "tx-hw-gso-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_GSO_BYTES] = { .name = "tx-hw-gso-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_PACKETS] = { .name = "tx-hw-gso-wire-packets", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_BYTES] = { .name = "tx-hw-gso-wire-bytes", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_HW_DROP_RATELIMITS] = { .name = "tx-hw-drop-ratelimits", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_STOP] = { .name = "tx-stop", .type = YNL_PT_UINT, };
-	arr[NETDEV_A_QSTATS_TX_WAKE] = { .name = "tx-wake", .type = YNL_PT_UINT, };
+	arr[NETDEV_A_QSTATS_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_QSTATS_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_QSTATS_QUEUE_TYPE].name = "queue-type";
+	arr[NETDEV_A_QSTATS_QUEUE_TYPE].type = YNL_PT_U32;
+	arr[NETDEV_A_QSTATS_QUEUE_ID].name = "queue-id";
+	arr[NETDEV_A_QSTATS_QUEUE_ID].type = YNL_PT_U32;
+	arr[NETDEV_A_QSTATS_SCOPE].name = "scope";
+	arr[NETDEV_A_QSTATS_SCOPE].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_PACKETS].name = "rx-packets";
+	arr[NETDEV_A_QSTATS_RX_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_BYTES].name = "rx-bytes";
+	arr[NETDEV_A_QSTATS_RX_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_PACKETS].name = "tx-packets";
+	arr[NETDEV_A_QSTATS_TX_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_BYTES].name = "tx-bytes";
+	arr[NETDEV_A_QSTATS_TX_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_ALLOC_FAIL].name = "rx-alloc-fail";
+	arr[NETDEV_A_QSTATS_RX_ALLOC_FAIL].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_DROPS].name = "rx-hw-drops";
+	arr[NETDEV_A_QSTATS_RX_HW_DROPS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_DROP_OVERRUNS].name = "rx-hw-drop-overruns";
+	arr[NETDEV_A_QSTATS_RX_HW_DROP_OVERRUNS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_CSUM_COMPLETE].name = "rx-csum-complete";
+	arr[NETDEV_A_QSTATS_RX_CSUM_COMPLETE].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_CSUM_UNNECESSARY].name = "rx-csum-unnecessary";
+	arr[NETDEV_A_QSTATS_RX_CSUM_UNNECESSARY].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_CSUM_NONE].name = "rx-csum-none";
+	arr[NETDEV_A_QSTATS_RX_CSUM_NONE].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_CSUM_BAD].name = "rx-csum-bad";
+	arr[NETDEV_A_QSTATS_RX_CSUM_BAD].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_PACKETS].name = "rx-hw-gro-packets";
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_BYTES].name = "rx-hw-gro-bytes";
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_PACKETS].name = "rx-hw-gro-wire-packets";
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_BYTES].name = "rx-hw-gro-wire-bytes";
+	arr[NETDEV_A_QSTATS_RX_HW_GRO_WIRE_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_RX_HW_DROP_RATELIMITS].name = "rx-hw-drop-ratelimits";
+	arr[NETDEV_A_QSTATS_RX_HW_DROP_RATELIMITS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_DROPS].name = "tx-hw-drops";
+	arr[NETDEV_A_QSTATS_TX_HW_DROPS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_DROP_ERRORS].name = "tx-hw-drop-errors";
+	arr[NETDEV_A_QSTATS_TX_HW_DROP_ERRORS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_CSUM_NONE].name = "tx-csum-none";
+	arr[NETDEV_A_QSTATS_TX_CSUM_NONE].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_NEEDS_CSUM].name = "tx-needs-csum";
+	arr[NETDEV_A_QSTATS_TX_NEEDS_CSUM].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_PACKETS].name = "tx-hw-gso-packets";
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_BYTES].name = "tx-hw-gso-bytes";
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_PACKETS].name = "tx-hw-gso-wire-packets";
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_PACKETS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_BYTES].name = "tx-hw-gso-wire-bytes";
+	arr[NETDEV_A_QSTATS_TX_HW_GSO_WIRE_BYTES].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_HW_DROP_RATELIMITS].name = "tx-hw-drop-ratelimits";
+	arr[NETDEV_A_QSTATS_TX_HW_DROP_RATELIMITS].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_STOP].name = "tx-stop";
+	arr[NETDEV_A_QSTATS_TX_STOP].type = YNL_PT_UINT;
+	arr[NETDEV_A_QSTATS_TX_WAKE].name = "tx-wake";
+	arr[NETDEV_A_QSTATS_TX_WAKE].type = YNL_PT_UINT;
 	return arr;
 } ();
 
@@ -274,10 +347,15 @@ struct ynl_policy_nest netdev_qstats_nest = {
 
 static std::array<ynl_policy_attr,NETDEV_A_DMABUF_MAX + 1> netdev_dmabuf_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_DMABUF_MAX + 1> arr{};
-	arr[NETDEV_A_DMABUF_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NETDEV_A_DMABUF_QUEUES] = { .name = "queues", .type = YNL_PT_NEST, .nest = &netdev_queue_id_nest, };
-	arr[NETDEV_A_DMABUF_FD] = { .name = "fd", .type = YNL_PT_U32, };
-	arr[NETDEV_A_DMABUF_ID] = { .name = "id", .type = YNL_PT_U32, };
+	arr[NETDEV_A_DMABUF_IFINDEX].name = "ifindex";
+	arr[NETDEV_A_DMABUF_IFINDEX].type = YNL_PT_U32;
+	arr[NETDEV_A_DMABUF_QUEUES].name = "queues";
+	arr[NETDEV_A_DMABUF_QUEUES].type = YNL_PT_NEST;
+	arr[NETDEV_A_DMABUF_QUEUES].nest = &netdev_queue_id_nest;
+	arr[NETDEV_A_DMABUF_FD].name = "fd";
+	arr[NETDEV_A_DMABUF_FD].type = YNL_PT_U32;
+	arr[NETDEV_A_DMABUF_ID].name = "id";
+	arr[NETDEV_A_DMABUF_ID].type = YNL_PT_U32;
 	return arr;
 } ();
 

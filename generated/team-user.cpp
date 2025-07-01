@@ -32,14 +32,22 @@ std::string_view team_op_str(int op)
 /* Policies */
 static std::array<ynl_policy_attr,TEAM_ATTR_OPTION_MAX + 1> team_attr_option_policy = []() {
 	std::array<ynl_policy_attr,TEAM_ATTR_OPTION_MAX + 1> arr{};
-	arr[TEAM_ATTR_OPTION_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[TEAM_ATTR_OPTION_NAME] = { .name = "name", .type = YNL_PT_NUL_STR, };
-	arr[TEAM_ATTR_OPTION_CHANGED] = { .name = "changed", .type = YNL_PT_FLAG, };
-	arr[TEAM_ATTR_OPTION_TYPE] = { .name = "type", .type = YNL_PT_U8, };
-	arr[TEAM_ATTR_OPTION_DATA] = { .name = "data", .type = YNL_PT_BINARY,};
-	arr[TEAM_ATTR_OPTION_REMOVED] = { .name = "removed", .type = YNL_PT_FLAG, };
-	arr[TEAM_ATTR_OPTION_PORT_IFINDEX] = { .name = "port-ifindex", .type = YNL_PT_U32, };
-	arr[TEAM_ATTR_OPTION_ARRAY_INDEX] = { .name = "array-index", .type = YNL_PT_U32, };
+	arr[TEAM_ATTR_OPTION_UNSPEC].name = "unspec";
+	arr[TEAM_ATTR_OPTION_UNSPEC].type = YNL_PT_REJECT;
+	arr[TEAM_ATTR_OPTION_NAME].name = "name";
+	arr[TEAM_ATTR_OPTION_NAME].type  = YNL_PT_NUL_STR;
+	arr[TEAM_ATTR_OPTION_CHANGED].name = "changed";
+	arr[TEAM_ATTR_OPTION_CHANGED].type = YNL_PT_FLAG;
+	arr[TEAM_ATTR_OPTION_TYPE].name = "type";
+	arr[TEAM_ATTR_OPTION_TYPE].type = YNL_PT_U8;
+	arr[TEAM_ATTR_OPTION_DATA].name = "data";
+	arr[TEAM_ATTR_OPTION_DATA].type = YNL_PT_BINARY;
+	arr[TEAM_ATTR_OPTION_REMOVED].name = "removed";
+	arr[TEAM_ATTR_OPTION_REMOVED].type = YNL_PT_FLAG;
+	arr[TEAM_ATTR_OPTION_PORT_IFINDEX].name = "port-ifindex";
+	arr[TEAM_ATTR_OPTION_PORT_IFINDEX].type = YNL_PT_U32;
+	arr[TEAM_ATTR_OPTION_ARRAY_INDEX].name = "array-index";
+	arr[TEAM_ATTR_OPTION_ARRAY_INDEX].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -50,13 +58,20 @@ struct ynl_policy_nest team_attr_option_nest = {
 
 static std::array<ynl_policy_attr,TEAM_ATTR_PORT_MAX + 1> team_attr_port_policy = []() {
 	std::array<ynl_policy_attr,TEAM_ATTR_PORT_MAX + 1> arr{};
-	arr[TEAM_ATTR_PORT_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[TEAM_ATTR_PORT_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[TEAM_ATTR_PORT_CHANGED] = { .name = "changed", .type = YNL_PT_FLAG, };
-	arr[TEAM_ATTR_PORT_LINKUP] = { .name = "linkup", .type = YNL_PT_FLAG, };
-	arr[TEAM_ATTR_PORT_SPEED] = { .name = "speed", .type = YNL_PT_U32, };
-	arr[TEAM_ATTR_PORT_DUPLEX] = { .name = "duplex", .type = YNL_PT_U8, };
-	arr[TEAM_ATTR_PORT_REMOVED] = { .name = "removed", .type = YNL_PT_FLAG, };
+	arr[TEAM_ATTR_PORT_UNSPEC].name = "unspec";
+	arr[TEAM_ATTR_PORT_UNSPEC].type = YNL_PT_REJECT;
+	arr[TEAM_ATTR_PORT_IFINDEX].name = "ifindex";
+	arr[TEAM_ATTR_PORT_IFINDEX].type = YNL_PT_U32;
+	arr[TEAM_ATTR_PORT_CHANGED].name = "changed";
+	arr[TEAM_ATTR_PORT_CHANGED].type = YNL_PT_FLAG;
+	arr[TEAM_ATTR_PORT_LINKUP].name = "linkup";
+	arr[TEAM_ATTR_PORT_LINKUP].type = YNL_PT_FLAG;
+	arr[TEAM_ATTR_PORT_SPEED].name = "speed";
+	arr[TEAM_ATTR_PORT_SPEED].type = YNL_PT_U32;
+	arr[TEAM_ATTR_PORT_DUPLEX].name = "duplex";
+	arr[TEAM_ATTR_PORT_DUPLEX].type = YNL_PT_U8;
+	arr[TEAM_ATTR_PORT_REMOVED].name = "removed";
+	arr[TEAM_ATTR_PORT_REMOVED].type = YNL_PT_FLAG;
 	return arr;
 } ();
 
@@ -67,8 +82,11 @@ struct ynl_policy_nest team_attr_port_nest = {
 
 static std::array<ynl_policy_attr,TEAM_ATTR_ITEM_OPTION_MAX + 1> team_item_option_policy = []() {
 	std::array<ynl_policy_attr,TEAM_ATTR_ITEM_OPTION_MAX + 1> arr{};
-	arr[TEAM_ATTR_ITEM_OPTION_UNSPEC] = { .name = "option-unspec", .type = YNL_PT_REJECT, };
-	arr[TEAM_ATTR_ITEM_OPTION] = { .name = "option", .type = YNL_PT_NEST, .nest = &team_attr_option_nest, };
+	arr[TEAM_ATTR_ITEM_OPTION_UNSPEC].name = "option-unspec";
+	arr[TEAM_ATTR_ITEM_OPTION_UNSPEC].type = YNL_PT_REJECT;
+	arr[TEAM_ATTR_ITEM_OPTION].name = "option";
+	arr[TEAM_ATTR_ITEM_OPTION].type = YNL_PT_NEST;
+	arr[TEAM_ATTR_ITEM_OPTION].nest = &team_attr_option_nest;
 	return arr;
 } ();
 
@@ -79,8 +97,11 @@ struct ynl_policy_nest team_item_option_nest = {
 
 static std::array<ynl_policy_attr,TEAM_ATTR_ITEM_PORT_MAX + 1> team_item_port_policy = []() {
 	std::array<ynl_policy_attr,TEAM_ATTR_ITEM_PORT_MAX + 1> arr{};
-	arr[TEAM_ATTR_ITEM_PORT_UNSPEC] = { .name = "port-unspec", .type = YNL_PT_REJECT, };
-	arr[TEAM_ATTR_ITEM_PORT] = { .name = "port", .type = YNL_PT_NEST, .nest = &team_attr_port_nest, };
+	arr[TEAM_ATTR_ITEM_PORT_UNSPEC].name = "port-unspec";
+	arr[TEAM_ATTR_ITEM_PORT_UNSPEC].type = YNL_PT_REJECT;
+	arr[TEAM_ATTR_ITEM_PORT].name = "port";
+	arr[TEAM_ATTR_ITEM_PORT].type = YNL_PT_NEST;
+	arr[TEAM_ATTR_ITEM_PORT].nest = &team_attr_port_nest;
 	return arr;
 } ();
 
@@ -91,10 +112,16 @@ struct ynl_policy_nest team_item_port_nest = {
 
 static std::array<ynl_policy_attr,TEAM_ATTR_MAX + 1> team_policy = []() {
 	std::array<ynl_policy_attr,TEAM_ATTR_MAX + 1> arr{};
-	arr[TEAM_ATTR_UNSPEC] = { .name = "unspec", .type = YNL_PT_REJECT, };
-	arr[TEAM_ATTR_TEAM_IFINDEX] = { .name = "team-ifindex", .type = YNL_PT_U32, };
-	arr[TEAM_ATTR_LIST_OPTION] = { .name = "list-option", .type = YNL_PT_NEST, .nest = &team_item_option_nest, };
-	arr[TEAM_ATTR_LIST_PORT] = { .name = "list-port", .type = YNL_PT_NEST, .nest = &team_item_port_nest, };
+	arr[TEAM_ATTR_UNSPEC].name = "unspec";
+	arr[TEAM_ATTR_UNSPEC].type = YNL_PT_REJECT;
+	arr[TEAM_ATTR_TEAM_IFINDEX].name = "team-ifindex";
+	arr[TEAM_ATTR_TEAM_IFINDEX].type = YNL_PT_U32;
+	arr[TEAM_ATTR_LIST_OPTION].name = "list-option";
+	arr[TEAM_ATTR_LIST_OPTION].type = YNL_PT_NEST;
+	arr[TEAM_ATTR_LIST_OPTION].nest = &team_item_option_nest;
+	arr[TEAM_ATTR_LIST_PORT].name = "list-port";
+	arr[TEAM_ATTR_LIST_PORT].type = YNL_PT_NEST;
+	arr[TEAM_ATTR_LIST_PORT].nest = &team_item_port_nest;
 	return arr;
 } ();
 
@@ -141,7 +168,7 @@ int team_attr_option_parse(struct ynl_parse_arg *yarg,
 		if (type == TEAM_ATTR_OPTION_NAME) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->name.assign(ynl_attr_get_str(attr), ynl_attr_data_len(attr));
+			dst->name.assign(ynl_attr_get_str(attr));
 		} else if (type == TEAM_ATTR_OPTION_CHANGED) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

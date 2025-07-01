@@ -64,8 +64,10 @@ std::string_view net_shaper_metric_str(net_shaper_metric value)
 /* Policies */
 static std::array<ynl_policy_attr,NET_SHAPER_A_HANDLE_MAX + 1> net_shaper_handle_policy = []() {
 	std::array<ynl_policy_attr,NET_SHAPER_A_HANDLE_MAX + 1> arr{};
-	arr[NET_SHAPER_A_HANDLE_SCOPE] = { .name = "scope", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_HANDLE_ID] = { .name = "id", .type = YNL_PT_U32, };
+	arr[NET_SHAPER_A_HANDLE_SCOPE].name = "scope";
+	arr[NET_SHAPER_A_HANDLE_SCOPE].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_HANDLE_ID].name = "id";
+	arr[NET_SHAPER_A_HANDLE_ID].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -76,9 +78,13 @@ struct ynl_policy_nest net_shaper_handle_nest = {
 
 static std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> net_shaper_leaf_info_policy = []() {
 	std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> arr{};
-	arr[NET_SHAPER_A_HANDLE] = { .name = "handle", .type = YNL_PT_NEST, .nest = &net_shaper_handle_nest, };
-	arr[NET_SHAPER_A_PRIORITY] = { .name = "priority", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_WEIGHT] = { .name = "weight", .type = YNL_PT_U32, };
+	arr[NET_SHAPER_A_HANDLE].name = "handle";
+	arr[NET_SHAPER_A_HANDLE].type = YNL_PT_NEST;
+	arr[NET_SHAPER_A_HANDLE].nest = &net_shaper_handle_nest;
+	arr[NET_SHAPER_A_PRIORITY].name = "priority";
+	arr[NET_SHAPER_A_PRIORITY].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_WEIGHT].name = "weight";
+	arr[NET_SHAPER_A_WEIGHT].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -89,16 +95,29 @@ struct ynl_policy_nest net_shaper_leaf_info_nest = {
 
 static std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> net_shaper_net_shaper_policy = []() {
 	std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> arr{};
-	arr[NET_SHAPER_A_HANDLE] = { .name = "handle", .type = YNL_PT_NEST, .nest = &net_shaper_handle_nest, };
-	arr[NET_SHAPER_A_METRIC] = { .name = "metric", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_BW_MIN] = { .name = "bw-min", .type = YNL_PT_UINT, };
-	arr[NET_SHAPER_A_BW_MAX] = { .name = "bw-max", .type = YNL_PT_UINT, };
-	arr[NET_SHAPER_A_BURST] = { .name = "burst", .type = YNL_PT_UINT, };
-	arr[NET_SHAPER_A_PRIORITY] = { .name = "priority", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_WEIGHT] = { .name = "weight", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_PARENT] = { .name = "parent", .type = YNL_PT_NEST, .nest = &net_shaper_handle_nest, };
-	arr[NET_SHAPER_A_LEAVES] = { .name = "leaves", .type = YNL_PT_NEST, .nest = &net_shaper_leaf_info_nest, };
+	arr[NET_SHAPER_A_HANDLE].name = "handle";
+	arr[NET_SHAPER_A_HANDLE].type = YNL_PT_NEST;
+	arr[NET_SHAPER_A_HANDLE].nest = &net_shaper_handle_nest;
+	arr[NET_SHAPER_A_METRIC].name = "metric";
+	arr[NET_SHAPER_A_METRIC].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_BW_MIN].name = "bw-min";
+	arr[NET_SHAPER_A_BW_MIN].type = YNL_PT_UINT;
+	arr[NET_SHAPER_A_BW_MAX].name = "bw-max";
+	arr[NET_SHAPER_A_BW_MAX].type = YNL_PT_UINT;
+	arr[NET_SHAPER_A_BURST].name = "burst";
+	arr[NET_SHAPER_A_BURST].type = YNL_PT_UINT;
+	arr[NET_SHAPER_A_PRIORITY].name = "priority";
+	arr[NET_SHAPER_A_PRIORITY].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_WEIGHT].name = "weight";
+	arr[NET_SHAPER_A_WEIGHT].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_IFINDEX].name = "ifindex";
+	arr[NET_SHAPER_A_IFINDEX].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_PARENT].name = "parent";
+	arr[NET_SHAPER_A_PARENT].type = YNL_PT_NEST;
+	arr[NET_SHAPER_A_PARENT].nest = &net_shaper_handle_nest;
+	arr[NET_SHAPER_A_LEAVES].name = "leaves";
+	arr[NET_SHAPER_A_LEAVES].type = YNL_PT_NEST;
+	arr[NET_SHAPER_A_LEAVES].nest = &net_shaper_leaf_info_nest;
 	return arr;
 } ();
 
@@ -109,16 +128,26 @@ struct ynl_policy_nest net_shaper_net_shaper_nest = {
 
 static std::array<ynl_policy_attr,NET_SHAPER_A_CAPS_MAX + 1> net_shaper_caps_policy = []() {
 	std::array<ynl_policy_attr,NET_SHAPER_A_CAPS_MAX + 1> arr{};
-	arr[NET_SHAPER_A_CAPS_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_CAPS_SCOPE] = { .name = "scope", .type = YNL_PT_U32, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS] = { .name = "support-metric-bps", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_PPS] = { .name = "support-metric-pps", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_NESTING] = { .name = "support-nesting", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MIN] = { .name = "support-bw-min", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MAX] = { .name = "support-bw-max", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_BURST] = { .name = "support-burst", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_PRIORITY] = { .name = "support-priority", .type = YNL_PT_FLAG, };
-	arr[NET_SHAPER_A_CAPS_SUPPORT_WEIGHT] = { .name = "support-weight", .type = YNL_PT_FLAG, };
+	arr[NET_SHAPER_A_CAPS_IFINDEX].name = "ifindex";
+	arr[NET_SHAPER_A_CAPS_IFINDEX].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_CAPS_SCOPE].name = "scope";
+	arr[NET_SHAPER_A_CAPS_SCOPE].type = YNL_PT_U32;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS].name = "support-metric-bps";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_PPS].name = "support-metric-pps";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_METRIC_PPS].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_NESTING].name = "support-nesting";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_NESTING].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MIN].name = "support-bw-min";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MIN].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MAX].name = "support-bw-max";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BW_MAX].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BURST].name = "support-burst";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_BURST].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_PRIORITY].name = "support-priority";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_PRIORITY].type = YNL_PT_FLAG;
+	arr[NET_SHAPER_A_CAPS_SUPPORT_WEIGHT].name = "support-weight";
+	arr[NET_SHAPER_A_CAPS_SUPPORT_WEIGHT].type = YNL_PT_FLAG;
 	return arr;
 } ();
 

@@ -167,8 +167,10 @@ class Type(SpecAttr):
         raise Exception(f"Type policy not implemented for class type {self.type}")
 
     def attr_typol(self, cw):
-        typol = self._attr_typol()
-        cw.p(f'arr[{self.enum_name}] = {"{"} .name = "{self.name}", {typol}{"}"};')
+        cw.p(f'arr[{self.enum_name}].name = "{self.name}";')
+
+        for key, val in self._attr_typol().items():
+            cw.p(f'arr[{self.enum_name}].{key} = {val};')
 
     def _attr_put_line(self, ri, var, line):
         if self.presence_type() == "flag":
@@ -241,7 +243,7 @@ class TypeUnused(Type):
         return ["return YNL_PARSE_CB_ERROR;"], None, None
 
     def _attr_typol(self):
-        return ".type = YNL_PT_REJECT, "
+        return {"type": "YNL_PT_REJECT"}
 
     def attr_policy(self, cw):
         pass
@@ -261,7 +263,7 @@ class TypePad(Type):
         return []
 
     def _attr_typol(self):
-        return ".type = YNL_PT_IGNORE, "
+        return {"type": "YNL_PT_IGNORE"}
 
     def attr_put(self, ri, var):
         pass
@@ -350,7 +352,7 @@ class TypeScalar(Type):
         return super()._attr_policy(policy)
 
     def _attr_typol(self):
-        return f".type = YNL_PT_U{c_upper(self.type[1:])}, "
+        return {"type": f"YNL_PT_U{c_upper(self.type[1:])}"}
 
     def arg_member(self, ri):
         return [
@@ -382,7 +384,7 @@ class TypeFlag(Type):
         ri.cw.p(f"bool {self.c_name}{{}};")
 
     def _attr_typol(self):
-        return ".type = YNL_PT_FLAG, "
+        return {"type": "YNL_PT_FLAG"}
 
     def attr_put(self, ri, var):
         self._attr_put_line(ri, var, f"ynl_attr_put(nlh, {self.enum_name}, NULL, 0)")
@@ -405,7 +407,7 @@ class TypeString(Type):
         ri.cw.p(f"std::string {self.c_name};")
 
     def _attr_typol(self):
-        return f".type = YNL_PT_NUL_STR, "
+        return {"type ": "YNL_PT_NUL_STR"}
 
     def _attr_policy(self, policy):
         if "exact-len" in self.checks:
@@ -455,7 +457,7 @@ class TypeBinary(Type):
         ri.cw.p(f"std::vector<__u8> {self.c_name};")
 
     def _attr_typol(self):
-        return f".type = YNL_PT_BINARY,"
+        return {"type": "YNL_PT_BINARY"}
 
     def _attr_policy(self, policy):
         if "exact-len" in self.checks:
@@ -506,7 +508,7 @@ class TypeBitfield32(Type):
         return "struct nla_bitfield32"
 
     def _attr_typol(self):
-        return f".type = YNL_PT_BITFIELD32, "
+        return {"type": "YNL_PT_BITFIELD32"}
 
     def _attr_policy(self, policy):
         if not "enum" in self.attr:
@@ -538,7 +540,7 @@ class TypeNest(Type):
         return self.nested_struct_type
 
     def _attr_typol(self):
-        return f".type = YNL_PT_NEST, .nest = &{self.nested_render_name}_nest, "
+        return {"type": "YNL_PT_NEST", "nest": f"&{self.nested_render_name}_nest" }
 
     def _attr_policy(self, policy):
         return "NLA_POLICY_NESTED(" + self.nested_render_name + "_nl_policy)"
@@ -644,7 +646,7 @@ class TypeArrayNest(Type):
             raise Exception(f"Sub-type {self.attr['sub-type']} not supported yet")
 
     def _attr_typol(self):
-        return f".type = YNL_PT_NEST, .nest = &{self.nested_render_name}_nest, "
+        return {"type": "YNL_PT_NEST", "nest": f"&{self.nested_render_name}_nest"}
 
     def _attr_get(self, ri, var):
         local_vars = ["const struct nlattr *attr2;"]
@@ -661,7 +663,7 @@ class TypeNestTypeValue(Type):
         return self.nested_struct_type
 
     def _attr_typol(self):
-        return f".type = YNL_PT_NEST, .nest = &{self.nested_render_name}_nest, "
+        return {"type": "YNL_PT_NEST", "nest": f"&{self.nested_render_name}_nest"}
 
     def _attr_get(self, ri, var):
         prev = "attr"

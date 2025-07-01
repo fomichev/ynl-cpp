@@ -55,8 +55,10 @@ std::string_view psp_version_str(psp_version value)
 /* Policies */
 static std::array<ynl_policy_attr,PSP_A_KEYS_MAX + 1> psp_keys_policy = []() {
 	std::array<ynl_policy_attr,PSP_A_KEYS_MAX + 1> arr{};
-	arr[PSP_A_KEYS_KEY] = { .name = "key", .type = YNL_PT_BINARY,};
-	arr[PSP_A_KEYS_SPI] = { .name = "spi", .type = YNL_PT_U32, };
+	arr[PSP_A_KEYS_KEY].name = "key";
+	arr[PSP_A_KEYS_KEY].type = YNL_PT_BINARY;
+	arr[PSP_A_KEYS_SPI].name = "spi";
+	arr[PSP_A_KEYS_SPI].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -67,10 +69,14 @@ struct ynl_policy_nest psp_keys_nest = {
 
 static std::array<ynl_policy_attr,PSP_A_DEV_MAX + 1> psp_dev_policy = []() {
 	std::array<ynl_policy_attr,PSP_A_DEV_MAX + 1> arr{};
-	arr[PSP_A_DEV_ID] = { .name = "id", .type = YNL_PT_U32, };
-	arr[PSP_A_DEV_IFINDEX] = { .name = "ifindex", .type = YNL_PT_U32, };
-	arr[PSP_A_DEV_PSP_VERSIONS_CAP] = { .name = "psp-versions-cap", .type = YNL_PT_U32, };
-	arr[PSP_A_DEV_PSP_VERSIONS_ENA] = { .name = "psp-versions-ena", .type = YNL_PT_U32, };
+	arr[PSP_A_DEV_ID].name = "id";
+	arr[PSP_A_DEV_ID].type = YNL_PT_U32;
+	arr[PSP_A_DEV_IFINDEX].name = "ifindex";
+	arr[PSP_A_DEV_IFINDEX].type = YNL_PT_U32;
+	arr[PSP_A_DEV_PSP_VERSIONS_CAP].name = "psp-versions-cap";
+	arr[PSP_A_DEV_PSP_VERSIONS_CAP].type = YNL_PT_U32;
+	arr[PSP_A_DEV_PSP_VERSIONS_ENA].name = "psp-versions-ena";
+	arr[PSP_A_DEV_PSP_VERSIONS_ENA].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -81,11 +87,18 @@ struct ynl_policy_nest psp_dev_nest = {
 
 static std::array<ynl_policy_attr,PSP_A_ASSOC_MAX + 1> psp_assoc_policy = []() {
 	std::array<ynl_policy_attr,PSP_A_ASSOC_MAX + 1> arr{};
-	arr[PSP_A_ASSOC_DEV_ID] = { .name = "dev-id", .type = YNL_PT_U32, };
-	arr[PSP_A_ASSOC_VERSION] = { .name = "version", .type = YNL_PT_U32, };
-	arr[PSP_A_ASSOC_RX_KEY] = { .name = "rx-key", .type = YNL_PT_NEST, .nest = &psp_keys_nest, };
-	arr[PSP_A_ASSOC_TX_KEY] = { .name = "tx-key", .type = YNL_PT_NEST, .nest = &psp_keys_nest, };
-	arr[PSP_A_ASSOC_SOCK_FD] = { .name = "sock-fd", .type = YNL_PT_U32, };
+	arr[PSP_A_ASSOC_DEV_ID].name = "dev-id";
+	arr[PSP_A_ASSOC_DEV_ID].type = YNL_PT_U32;
+	arr[PSP_A_ASSOC_VERSION].name = "version";
+	arr[PSP_A_ASSOC_VERSION].type = YNL_PT_U32;
+	arr[PSP_A_ASSOC_RX_KEY].name = "rx-key";
+	arr[PSP_A_ASSOC_RX_KEY].type = YNL_PT_NEST;
+	arr[PSP_A_ASSOC_RX_KEY].nest = &psp_keys_nest;
+	arr[PSP_A_ASSOC_TX_KEY].name = "tx-key";
+	arr[PSP_A_ASSOC_TX_KEY].type = YNL_PT_NEST;
+	arr[PSP_A_ASSOC_TX_KEY].nest = &psp_keys_nest;
+	arr[PSP_A_ASSOC_SOCK_FD].name = "sock-fd";
+	arr[PSP_A_ASSOC_SOCK_FD].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -96,17 +109,28 @@ struct ynl_policy_nest psp_assoc_nest = {
 
 static std::array<ynl_policy_attr,PSP_A_STATS_MAX + 1> psp_stats_policy = []() {
 	std::array<ynl_policy_attr,PSP_A_STATS_MAX + 1> arr{};
-	arr[PSP_A_STATS_DEV_ID] = { .name = "dev-id", .type = YNL_PT_U32, };
-	arr[PSP_A_STATS_KEY_ROTATIONS] = { .name = "key-rotations", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_STALE_EVENTS] = { .name = "stale-events", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_RX_PACKETS] = { .name = "rx-packets", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_RX_BYTES] = { .name = "rx-bytes", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_RX_AUTH_FAIL] = { .name = "rx-auth-fail", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_RX_ERROR] = { .name = "rx-error", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_RX_BAD] = { .name = "rx-bad", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_TX_PACKETS] = { .name = "tx-packets", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_TX_BYTES] = { .name = "tx-bytes", .type = YNL_PT_UINT, };
-	arr[PSP_A_STATS_TX_ERROR] = { .name = "tx-error", .type = YNL_PT_UINT, };
+	arr[PSP_A_STATS_DEV_ID].name = "dev-id";
+	arr[PSP_A_STATS_DEV_ID].type = YNL_PT_U32;
+	arr[PSP_A_STATS_KEY_ROTATIONS].name = "key-rotations";
+	arr[PSP_A_STATS_KEY_ROTATIONS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_STALE_EVENTS].name = "stale-events";
+	arr[PSP_A_STATS_STALE_EVENTS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_PACKETS].name = "rx-packets";
+	arr[PSP_A_STATS_RX_PACKETS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_BYTES].name = "rx-bytes";
+	arr[PSP_A_STATS_RX_BYTES].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_AUTH_FAIL].name = "rx-auth-fail";
+	arr[PSP_A_STATS_RX_AUTH_FAIL].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_ERROR].name = "rx-error";
+	arr[PSP_A_STATS_RX_ERROR].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_BAD].name = "rx-bad";
+	arr[PSP_A_STATS_RX_BAD].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_PACKETS].name = "tx-packets";
+	arr[PSP_A_STATS_TX_PACKETS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_BYTES].name = "tx-bytes";
+	arr[PSP_A_STATS_TX_BYTES].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_ERROR].name = "tx-error";
+	arr[PSP_A_STATS_TX_ERROR].type = YNL_PT_UINT;
 	return arr;
 } ();
 
