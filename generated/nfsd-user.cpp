@@ -48,7 +48,7 @@ static std::array<ynl_policy_attr,NFSD_A_VERSION_MAX + 1> nfsd_version_policy = 
 } ();
 
 struct ynl_policy_nest nfsd_version_nest = {
-	.max_attr = NFSD_A_VERSION_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_VERSION_MAX),
 	.table = nfsd_version_policy.data(),
 };
 
@@ -62,7 +62,7 @@ static std::array<ynl_policy_attr,NFSD_A_SOCK_MAX + 1> nfsd_sock_policy = []() {
 } ();
 
 struct ynl_policy_nest nfsd_sock_nest = {
-	.max_attr = NFSD_A_SOCK_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_SOCK_MAX),
 	.table = nfsd_sock_policy.data(),
 };
 
@@ -78,7 +78,7 @@ static std::array<ynl_policy_attr,NFSD_A_RPC_STATUS_MAX + 1> nfsd_rpc_status_pol
 	arr[NFSD_A_RPC_STATUS_VERSION].type = YNL_PT_U8;
 	arr[NFSD_A_RPC_STATUS_PROC].name = "proc";
 	arr[NFSD_A_RPC_STATUS_PROC].type = YNL_PT_U32;
-	arr[NFSD_A_RPC_STATUS_SERVICE_TIME].name = "service_time";
+	arr[NFSD_A_RPC_STATUS_SERVICE_TIME].name = "service-time";
 	arr[NFSD_A_RPC_STATUS_SERVICE_TIME].type = YNL_PT_U64;
 	arr[NFSD_A_RPC_STATUS_PAD].name = "pad";
 	arr[NFSD_A_RPC_STATUS_PAD].type = YNL_PT_IGNORE;
@@ -100,7 +100,7 @@ static std::array<ynl_policy_attr,NFSD_A_RPC_STATUS_MAX + 1> nfsd_rpc_status_pol
 } ();
 
 struct ynl_policy_nest nfsd_rpc_status_nest = {
-	.max_attr = NFSD_A_RPC_STATUS_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_RPC_STATUS_MAX),
 	.table = nfsd_rpc_status_policy.data(),
 };
 
@@ -118,7 +118,7 @@ static std::array<ynl_policy_attr,NFSD_A_SERVER_MAX + 1> nfsd_server_policy = []
 } ();
 
 struct ynl_policy_nest nfsd_server_nest = {
-	.max_attr = NFSD_A_SERVER_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_SERVER_MAX),
 	.table = nfsd_server_policy.data(),
 };
 
@@ -131,7 +131,7 @@ static std::array<ynl_policy_attr,NFSD_A_SERVER_PROTO_MAX + 1> nfsd_server_proto
 } ();
 
 struct ynl_policy_nest nfsd_server_proto_nest = {
-	.max_attr = NFSD_A_SERVER_PROTO_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_SERVER_PROTO_MAX),
 	.table = nfsd_server_proto_policy.data(),
 };
 
@@ -144,7 +144,7 @@ static std::array<ynl_policy_attr,NFSD_A_SERVER_SOCK_MAX + 1> nfsd_server_sock_p
 } ();
 
 struct ynl_policy_nest nfsd_server_sock_nest = {
-	.max_attr = NFSD_A_SERVER_SOCK_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_SERVER_SOCK_MAX),
 	.table = nfsd_server_sock_policy.data(),
 };
 
@@ -158,7 +158,7 @@ static std::array<ynl_policy_attr,NFSD_A_POOL_MODE_MAX + 1> nfsd_pool_mode_polic
 } ();
 
 struct ynl_policy_nest nfsd_pool_mode_nest = {
-	.max_attr = NFSD_A_POOL_MODE_MAX,
+	.max_attr = static_cast<unsigned int>(NFSD_A_POOL_MODE_MAX),
 	.table = nfsd_pool_mode_policy.data(),
 };
 

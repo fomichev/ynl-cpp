@@ -63,7 +63,7 @@ static std::array<ynl_policy_attr,PSP_A_KEYS_MAX + 1> psp_keys_policy = []() {
 } ();
 
 struct ynl_policy_nest psp_keys_nest = {
-	.max_attr = PSP_A_KEYS_MAX,
+	.max_attr = static_cast<unsigned int>(PSP_A_KEYS_MAX),
 	.table = psp_keys_policy.data(),
 };
 
@@ -81,7 +81,7 @@ static std::array<ynl_policy_attr,PSP_A_DEV_MAX + 1> psp_dev_policy = []() {
 } ();
 
 struct ynl_policy_nest psp_dev_nest = {
-	.max_attr = PSP_A_DEV_MAX,
+	.max_attr = static_cast<unsigned int>(PSP_A_DEV_MAX),
 	.table = psp_dev_policy.data(),
 };
 
@@ -103,7 +103,7 @@ static std::array<ynl_policy_attr,PSP_A_ASSOC_MAX + 1> psp_assoc_policy = []() {
 } ();
 
 struct ynl_policy_nest psp_assoc_nest = {
-	.max_attr = PSP_A_ASSOC_MAX,
+	.max_attr = static_cast<unsigned int>(PSP_A_ASSOC_MAX),
 	.table = psp_assoc_policy.data(),
 };
 
@@ -135,7 +135,7 @@ static std::array<ynl_policy_attr,PSP_A_STATS_MAX + 1> psp_stats_policy = []() {
 } ();
 
 struct ynl_policy_nest psp_stats_nest = {
-	.max_attr = PSP_A_STATS_MAX,
+	.max_attr = static_cast<unsigned int>(PSP_A_STATS_MAX),
 	.table = psp_stats_policy.data(),
 };
 
@@ -548,22 +548,14 @@ psp_get_stats_dump(ynl_cpp::ynl_socket&  ys)
 
 static constexpr std::array<ynl_ntf_info, PSP_CMD_KEY_ROTATE_NTF + 1> psp_ntf_info = []() {
 	std::array<ynl_ntf_info, PSP_CMD_KEY_ROTATE_NTF + 1> arr{};
-	arr[PSP_CMD_DEV_ADD_NTF] =  {
-		.cb		= psp_dev_get_rsp_parse,
-		.policy		= &psp_dev_nest,
-	};
-	arr[PSP_CMD_DEV_DEL_NTF] =  {
-		.cb		= psp_dev_get_rsp_parse,
-		.policy		= &psp_dev_nest,
-	};
-	arr[PSP_CMD_DEV_CHANGE_NTF] =  {
-		.cb		= psp_dev_get_rsp_parse,
-		.policy		= &psp_dev_nest,
-	};
-	arr[PSP_CMD_KEY_ROTATE_NTF] =  {
-		.cb		= psp_key_rotate_rsp_parse,
-		.policy		= &psp_dev_nest,
-	};
+	arr[PSP_CMD_DEV_ADD_NTF].policy		= &psp_dev_nest;
+	arr[PSP_CMD_DEV_ADD_NTF].cb		= psp_dev_get_rsp_parse;
+	arr[PSP_CMD_DEV_DEL_NTF].policy		= &psp_dev_nest;
+	arr[PSP_CMD_DEV_DEL_NTF].cb		= psp_dev_get_rsp_parse;
+	arr[PSP_CMD_DEV_CHANGE_NTF].policy		= &psp_dev_nest;
+	arr[PSP_CMD_DEV_CHANGE_NTF].cb		= psp_dev_get_rsp_parse;
+	arr[PSP_CMD_KEY_ROTATE_NTF].policy		= &psp_dev_nest;
+	arr[PSP_CMD_KEY_ROTATE_NTF].cb		= psp_key_rotate_rsp_parse;
 	return arr;
 } ();
 

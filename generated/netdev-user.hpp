@@ -33,9 +33,15 @@ std::string_view netdev_queue_type_str(netdev_queue_type value);
 std::string_view netdev_qstats_scope_str(netdev_qstats_scope value);
 
 /* Common nested types */
+struct netdev_io_uring_provider_info {
+};
+
 struct netdev_page_pool_info {
 	std::optional<__u64> id;
 	std::optional<__u32> ifindex;
+};
+
+struct netdev_xsk_info {
 };
 
 struct netdev_queue_id {
@@ -89,6 +95,7 @@ struct netdev_page_pool_get_rsp {
 	std::optional<__u64> inflight_mem;
 	std::optional<__u64> detach_time;
 	std::optional<__u32> dmabuf;
+	std::optional<netdev_io_uring_provider_info> io_uring;
 };
 
 /*
@@ -161,6 +168,8 @@ struct netdev_queue_get_rsp {
 	std::optional<__u32> napi_id;
 	std::optional<__u32> ifindex;
 	std::optional<__u32> dmabuf;
+	std::optional<netdev_io_uring_provider_info> io_uring;
+	std::optional<netdev_xsk_info> xsk;
 };
 
 /*
@@ -271,6 +280,23 @@ struct netdev_napi_set_req {
  * Set configurable NAPI instance settings.
  */
 int netdev_napi_set(ynl_cpp::ynl_socket&  ys, netdev_napi_set_req& req);
+
+/* ============== NETDEV_CMD_BIND_TX ============== */
+/* NETDEV_CMD_BIND_TX - do */
+struct netdev_bind_tx_req {
+	std::optional<__u32> ifindex;
+	std::optional<__u32> fd;
+};
+
+struct netdev_bind_tx_rsp {
+	std::optional<__u32> id;
+};
+
+/*
+ * Bind dmabuf to netdev for TX
+ */
+std::unique_ptr<netdev_bind_tx_rsp>
+netdev_bind_tx(ynl_cpp::ynl_socket&  ys, netdev_bind_tx_req& req);
 
 } //namespace ynl_cpp
 #endif /* _LINUX_NETDEV_GEN_H */

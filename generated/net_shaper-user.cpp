@@ -72,7 +72,7 @@ static std::array<ynl_policy_attr,NET_SHAPER_A_HANDLE_MAX + 1> net_shaper_handle
 } ();
 
 struct ynl_policy_nest net_shaper_handle_nest = {
-	.max_attr = NET_SHAPER_A_HANDLE_MAX,
+	.max_attr = static_cast<unsigned int>(NET_SHAPER_A_HANDLE_MAX),
 	.table = net_shaper_handle_policy.data(),
 };
 
@@ -89,7 +89,7 @@ static std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> net_shaper_leaf_info_pol
 } ();
 
 struct ynl_policy_nest net_shaper_leaf_info_nest = {
-	.max_attr = NET_SHAPER_A_MAX,
+	.max_attr = static_cast<unsigned int>(NET_SHAPER_A_MAX),
 	.table = net_shaper_leaf_info_policy.data(),
 };
 
@@ -122,7 +122,7 @@ static std::array<ynl_policy_attr,NET_SHAPER_A_MAX + 1> net_shaper_net_shaper_po
 } ();
 
 struct ynl_policy_nest net_shaper_net_shaper_nest = {
-	.max_attr = NET_SHAPER_A_MAX,
+	.max_attr = static_cast<unsigned int>(NET_SHAPER_A_MAX),
 	.table = net_shaper_net_shaper_policy.data(),
 };
 
@@ -152,7 +152,7 @@ static std::array<ynl_policy_attr,NET_SHAPER_A_CAPS_MAX + 1> net_shaper_caps_pol
 } ();
 
 struct ynl_policy_nest net_shaper_caps_nest = {
-	.max_attr = NET_SHAPER_A_CAPS_MAX,
+	.max_attr = static_cast<unsigned int>(NET_SHAPER_A_CAPS_MAX),
 	.table = net_shaper_caps_policy.data(),
 };
 

@@ -86,7 +86,7 @@ static std::array<ynl_policy_attr,HANDSHAKE_A_X509_MAX + 1> handshake_x509_polic
 } ();
 
 struct ynl_policy_nest handshake_x509_nest = {
-	.max_attr = HANDSHAKE_A_X509_MAX,
+	.max_attr = static_cast<unsigned int>(HANDSHAKE_A_X509_MAX),
 	.table = handshake_x509_policy.data(),
 };
 
@@ -113,7 +113,7 @@ static std::array<ynl_policy_attr,HANDSHAKE_A_ACCEPT_MAX + 1> handshake_accept_p
 } ();
 
 struct ynl_policy_nest handshake_accept_nest = {
-	.max_attr = HANDSHAKE_A_ACCEPT_MAX,
+	.max_attr = static_cast<unsigned int>(HANDSHAKE_A_ACCEPT_MAX),
 	.table = handshake_accept_policy.data(),
 };
 
@@ -129,7 +129,7 @@ static std::array<ynl_policy_attr,HANDSHAKE_A_DONE_MAX + 1> handshake_done_polic
 } ();
 
 struct ynl_policy_nest handshake_done_nest = {
-	.max_attr = HANDSHAKE_A_DONE_MAX,
+	.max_attr = static_cast<unsigned int>(HANDSHAKE_A_DONE_MAX),
 	.table = handshake_done_policy.data(),
 };
 
@@ -289,10 +289,8 @@ int handshake_done(ynl_cpp::ynl_socket&  ys, handshake_done_req& req)
 
 static constexpr std::array<ynl_ntf_info, HANDSHAKE_CMD_READY + 1> handshake_ntf_info = []() {
 	std::array<ynl_ntf_info, HANDSHAKE_CMD_READY + 1> arr{};
-	arr[HANDSHAKE_CMD_READY] =  {
-		.cb		= handshake_accept_rsp_parse,
-		.policy		= &handshake_accept_nest,
-	};
+	arr[HANDSHAKE_CMD_READY].policy		= &handshake_accept_nest;
+	arr[HANDSHAKE_CMD_READY].cb		= handshake_accept_rsp_parse;
 	return arr;
 } ();
 

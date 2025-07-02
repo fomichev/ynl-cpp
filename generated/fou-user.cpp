@@ -57,17 +57,17 @@ static std::array<ynl_policy_attr,FOU_ATTR_MAX + 1> fou_policy = []() {
 	arr[FOU_ATTR_IPPROTO].type = YNL_PT_U8;
 	arr[FOU_ATTR_TYPE].name = "type";
 	arr[FOU_ATTR_TYPE].type = YNL_PT_U8;
-	arr[FOU_ATTR_REMCSUM_NOPARTIAL].name = "remcsum_nopartial";
+	arr[FOU_ATTR_REMCSUM_NOPARTIAL].name = "remcsum-nopartial";
 	arr[FOU_ATTR_REMCSUM_NOPARTIAL].type = YNL_PT_FLAG;
-	arr[FOU_ATTR_LOCAL_V4].name = "local_v4";
+	arr[FOU_ATTR_LOCAL_V4].name = "local-v4";
 	arr[FOU_ATTR_LOCAL_V4].type = YNL_PT_U32;
-	arr[FOU_ATTR_LOCAL_V6].name = "local_v6";
+	arr[FOU_ATTR_LOCAL_V6].name = "local-v6";
 	arr[FOU_ATTR_LOCAL_V6].type = YNL_PT_BINARY;
-	arr[FOU_ATTR_PEER_V4].name = "peer_v4";
+	arr[FOU_ATTR_PEER_V4].name = "peer-v4";
 	arr[FOU_ATTR_PEER_V4].type = YNL_PT_U32;
-	arr[FOU_ATTR_PEER_V6].name = "peer_v6";
+	arr[FOU_ATTR_PEER_V6].name = "peer-v6";
 	arr[FOU_ATTR_PEER_V6].type = YNL_PT_BINARY;
-	arr[FOU_ATTR_PEER_PORT].name = "peer_port";
+	arr[FOU_ATTR_PEER_PORT].name = "peer-port";
 	arr[FOU_ATTR_PEER_PORT].type = YNL_PT_U16;
 	arr[FOU_ATTR_IFINDEX].name = "ifindex";
 	arr[FOU_ATTR_IFINDEX].type = YNL_PT_U32;
@@ -75,7 +75,7 @@ static std::array<ynl_policy_attr,FOU_ATTR_MAX + 1> fou_policy = []() {
 } ();
 
 struct ynl_policy_nest fou_nest = {
-	.max_attr = FOU_ATTR_MAX,
+	.max_attr = static_cast<unsigned int>(FOU_ATTR_MAX),
 	.table = fou_policy.data(),
 };
 

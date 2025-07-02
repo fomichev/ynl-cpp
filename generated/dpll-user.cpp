@@ -180,6 +180,20 @@ std::string_view dpll_pin_capabilities_str(dpll_pin_capabilities value)
 	return dpll_pin_capabilities_strmap[value];
 }
 
+static constexpr std::array<std::string_view, 1 + 1> dpll_feature_state_strmap = []() {
+	std::array<std::string_view, 1 + 1> arr{};
+	arr[0] = "disable";
+	arr[1] = "enable";
+	return arr;
+} ();
+
+std::string_view dpll_feature_state_str(dpll_feature_state value)
+{
+	if (value < 0 || value >= (int)(dpll_feature_state_strmap.size()))
+		return "";
+	return dpll_feature_state_strmap[value];
+}
+
 /* Policies */
 static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_frequency_range_policy = []() {
 	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
@@ -191,7 +205,7 @@ static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_frequency_range_polic
 } ();
 
 struct ynl_policy_nest dpll_frequency_range_nest = {
-	.max_attr = DPLL_A_PIN_MAX,
+	.max_attr = static_cast<unsigned int>(DPLL_A_PIN_MAX),
 	.table = dpll_frequency_range_policy.data(),
 };
 
@@ -211,7 +225,7 @@ static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_parent_device_pol
 } ();
 
 struct ynl_policy_nest dpll_pin_parent_device_nest = {
-	.max_attr = DPLL_A_PIN_MAX,
+	.max_attr = static_cast<unsigned int>(DPLL_A_PIN_MAX),
 	.table = dpll_pin_parent_device_policy.data(),
 };
 
@@ -225,8 +239,22 @@ static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_parent_pin_policy
 } ();
 
 struct ynl_policy_nest dpll_pin_parent_pin_nest = {
-	.max_attr = DPLL_A_PIN_MAX,
+	.max_attr = static_cast<unsigned int>(DPLL_A_PIN_MAX),
 	.table = dpll_pin_parent_pin_policy.data(),
+};
+
+static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_reference_sync_policy = []() {
+	std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> arr{};
+	arr[DPLL_A_PIN_ID].name = "id";
+	arr[DPLL_A_PIN_ID].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_STATE].name = "state";
+	arr[DPLL_A_PIN_STATE].type = YNL_PT_U32;
+	return arr;
+} ();
+
+struct ynl_policy_nest dpll_reference_sync_nest = {
+	.max_attr = static_cast<unsigned int>(DPLL_A_PIN_MAX),
+	.table = dpll_reference_sync_policy.data(),
 };
 
 static std::array<ynl_policy_attr,DPLL_A_MAX + 1> dpll_policy = []() {
@@ -253,11 +281,13 @@ static std::array<ynl_policy_attr,DPLL_A_MAX + 1> dpll_policy = []() {
 	arr[DPLL_A_LOCK_STATUS_ERROR].type = YNL_PT_U32;
 	arr[DPLL_A_CLOCK_QUALITY_LEVEL].name = "clock-quality-level";
 	arr[DPLL_A_CLOCK_QUALITY_LEVEL].type = YNL_PT_U32;
+	arr[DPLL_A_PHASE_OFFSET_MONITOR].name = "phase-offset-monitor";
+	arr[DPLL_A_PHASE_OFFSET_MONITOR].type = YNL_PT_U32;
 	return arr;
 } ();
 
 struct ynl_policy_nest dpll_nest = {
-	.max_attr = DPLL_A_MAX,
+	.max_attr = static_cast<unsigned int>(DPLL_A_MAX),
 	.table = dpll_policy.data(),
 };
 
@@ -321,11 +351,14 @@ static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_policy = []() {
 	arr[DPLL_A_PIN_ESYNC_FREQUENCY_SUPPORTED].nest = &dpll_frequency_range_nest;
 	arr[DPLL_A_PIN_ESYNC_PULSE].name = "esync-pulse";
 	arr[DPLL_A_PIN_ESYNC_PULSE].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_REFERENCE_SYNC].name = "reference-sync";
+	arr[DPLL_A_PIN_REFERENCE_SYNC].type = YNL_PT_NEST;
+	arr[DPLL_A_PIN_REFERENCE_SYNC].nest = &dpll_reference_sync_nest;
 	return arr;
 } ();
 
 struct ynl_policy_nest dpll_pin_nest = {
-	.max_attr = DPLL_A_PIN_MAX,
+	.max_attr = static_cast<unsigned int>(DPLL_A_PIN_MAX),
 	.table = dpll_pin_policy.data(),
 };
 
@@ -447,6 +480,44 @@ int dpll_pin_parent_pin_parse(struct ynl_parse_arg *yarg,
 	return 0;
 }
 
+int dpll_reference_sync_put(struct nlmsghdr *nlh, unsigned int attr_type,
+			    const dpll_reference_sync&  obj)
+{
+	struct nlattr *nest;
+
+	nest = ynl_attr_nest_start(nlh, attr_type);
+	if (obj.id.has_value())
+		ynl_attr_put_u32(nlh, DPLL_A_PIN_ID, obj.id.value());
+	if (obj.state.has_value())
+		ynl_attr_put_u32(nlh, DPLL_A_PIN_STATE, obj.state.value());
+	ynl_attr_nest_end(nlh, nest);
+
+	return 0;
+}
+
+int dpll_reference_sync_parse(struct ynl_parse_arg *yarg,
+			      const struct nlattr *nested)
+{
+	dpll_reference_sync *dst = (dpll_reference_sync *)yarg->data;
+	const struct nlattr *attr;
+
+	ynl_attr_for_each_nested(attr, nested) {
+		unsigned int type = ynl_attr_type(attr);
+
+		if (type == DPLL_A_PIN_ID) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+			dst->id = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == DPLL_A_PIN_STATE) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+			dst->state = (dpll_pin_state)ynl_attr_get_u32(attr);
+		}
+	}
+
+	return 0;
+}
+
 /* ============== DPLL_CMD_DEVICE_ID_GET ============== */
 /* DPLL_CMD_DEVICE_ID_GET - do */
 int dpll_device_id_get_rsp_parse(const struct nlmsghdr *nlh,
@@ -553,6 +624,10 @@ int dpll_device_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
 			dst->type = (dpll_type)ynl_attr_get_u32(attr);
+		} else if (type == DPLL_A_PHASE_OFFSET_MONITOR) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+			dst->phase_offset_monitor = (dpll_feature_state)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -636,6 +711,8 @@ int dpll_device_set(ynl_cpp::ynl_socket&  ys, dpll_device_set_req& req)
 
 	if (req.id.has_value())
 		ynl_attr_put_u32(nlh, DPLL_A_ID, req.id.value());
+	if (req.phase_offset_monitor.has_value())
+		ynl_attr_put_u32(nlh, DPLL_A_PHASE_OFFSET_MONITOR, req.phase_offset_monitor.value());
 
 	err = ynl_exec(ys, nlh, &yrs);
 	if (err < 0)
@@ -711,6 +788,7 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 {
 	unsigned int n_esync_frequency_supported = 0;
 	unsigned int n_frequency_supported = 0;
+	unsigned int n_reference_sync = 0;
 	unsigned int n_parent_device = 0;
 	unsigned int n_parent_pin = 0;
 	const struct nlattr *attr;
@@ -729,6 +807,8 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 		return ynl_error_parse(yarg, "attribute already present (pin.parent-device)");
 	if (dst->parent_pin.size() > 0)
 		return ynl_error_parse(yarg, "attribute already present (pin.parent-pin)");
+	if (dst->reference_sync.size() > 0)
+		return ynl_error_parse(yarg, "attribute already present (pin.reference-sync)");
 
 	ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
 		unsigned int type = ynl_attr_type(attr);
@@ -793,6 +873,8 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
 			dst->esync_pulse = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == DPLL_A_PIN_REFERENCE_SYNC) {
+			n_reference_sync++;
 		}
 	}
 
@@ -843,6 +925,19 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ynl_attr_type(attr) == DPLL_A_PIN_PARENT_PIN) {
 				parg.data = &dst->parent_pin[i];
 				if (dpll_pin_parent_pin_parse(&parg, attr))
+					return YNL_PARSE_CB_ERROR;
+				i++;
+			}
+		}
+	}
+	if (n_reference_sync) {
+		dst->reference_sync.resize(n_reference_sync);
+		i = 0;
+		parg.rsp_policy = &dpll_reference_sync_nest;
+		ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
+			if (ynl_attr_type(attr) == DPLL_A_PIN_REFERENCE_SYNC) {
+				parg.data = &dst->reference_sync[i];
+				if (dpll_reference_sync_parse(&parg, attr))
 					return YNL_PARSE_CB_ERROR;
 				i++;
 			}
@@ -938,6 +1033,8 @@ int dpll_pin_set(ynl_cpp::ynl_socket&  ys, dpll_pin_set_req& req)
 		ynl_attr_put_s32(nlh, DPLL_A_PIN_PHASE_ADJUST, req.phase_adjust.value());
 	if (req.esync_frequency.has_value())
 		ynl_attr_put_u64(nlh, DPLL_A_PIN_ESYNC_FREQUENCY, req.esync_frequency.value());
+	for (unsigned int i = 0; i < req.reference_sync.size(); i++)
+		dpll_reference_sync_put(nlh, DPLL_A_PIN_REFERENCE_SYNC, req.reference_sync[i]);
 
 	err = ynl_exec(ys, nlh, &yrs);
 	if (err < 0)
@@ -948,30 +1045,18 @@ int dpll_pin_set(ynl_cpp::ynl_socket&  ys, dpll_pin_set_req& req)
 
 static constexpr std::array<ynl_ntf_info, DPLL_CMD_PIN_CHANGE_NTF + 1> dpll_ntf_info = []() {
 	std::array<ynl_ntf_info, DPLL_CMD_PIN_CHANGE_NTF + 1> arr{};
-	arr[DPLL_CMD_DEVICE_CREATE_NTF] =  {
-		.cb		= dpll_device_get_rsp_parse,
-		.policy		= &dpll_nest,
-	};
-	arr[DPLL_CMD_DEVICE_DELETE_NTF] =  {
-		.cb		= dpll_device_get_rsp_parse,
-		.policy		= &dpll_nest,
-	};
-	arr[DPLL_CMD_DEVICE_CHANGE_NTF] =  {
-		.cb		= dpll_device_get_rsp_parse,
-		.policy		= &dpll_nest,
-	};
-	arr[DPLL_CMD_PIN_CREATE_NTF] =  {
-		.cb		= dpll_pin_get_rsp_parse,
-		.policy		= &dpll_pin_nest,
-	};
-	arr[DPLL_CMD_PIN_DELETE_NTF] =  {
-		.cb		= dpll_pin_get_rsp_parse,
-		.policy		= &dpll_pin_nest,
-	};
-	arr[DPLL_CMD_PIN_CHANGE_NTF] =  {
-		.cb		= dpll_pin_get_rsp_parse,
-		.policy		= &dpll_pin_nest,
-	};
+	arr[DPLL_CMD_DEVICE_CREATE_NTF].policy		= &dpll_nest;
+	arr[DPLL_CMD_DEVICE_CREATE_NTF].cb		= dpll_device_get_rsp_parse;
+	arr[DPLL_CMD_DEVICE_DELETE_NTF].policy		= &dpll_nest;
+	arr[DPLL_CMD_DEVICE_DELETE_NTF].cb		= dpll_device_get_rsp_parse;
+	arr[DPLL_CMD_DEVICE_CHANGE_NTF].policy		= &dpll_nest;
+	arr[DPLL_CMD_DEVICE_CHANGE_NTF].cb		= dpll_device_get_rsp_parse;
+	arr[DPLL_CMD_PIN_CREATE_NTF].policy		= &dpll_pin_nest;
+	arr[DPLL_CMD_PIN_CREATE_NTF].cb		= dpll_pin_get_rsp_parse;
+	arr[DPLL_CMD_PIN_DELETE_NTF].policy		= &dpll_pin_nest;
+	arr[DPLL_CMD_PIN_DELETE_NTF].cb		= dpll_pin_get_rsp_parse;
+	arr[DPLL_CMD_PIN_CHANGE_NTF].policy		= &dpll_pin_nest;
+	arr[DPLL_CMD_PIN_CHANGE_NTF].cb		= dpll_pin_get_rsp_parse;
 	return arr;
 } ();
 

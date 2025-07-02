@@ -83,7 +83,7 @@ static std::array<ynl_policy_attr,MPTCP_PM_ADDR_ATTR_MAX + 1> mptcp_pm_address_p
 } ();
 
 struct ynl_policy_nest mptcp_pm_address_nest = {
-	.max_attr = MPTCP_PM_ADDR_ATTR_MAX,
+	.max_attr = static_cast<unsigned int>(MPTCP_PM_ADDR_ATTR_MAX),
 	.table = mptcp_pm_address_policy.data(),
 };
 
@@ -96,7 +96,7 @@ static std::array<ynl_policy_attr,MPTCP_PM_ENDPOINT_MAX + 1> mptcp_pm_endpoint_p
 } ();
 
 struct ynl_policy_nest mptcp_pm_endpoint_nest = {
-	.max_attr = MPTCP_PM_ENDPOINT_MAX,
+	.max_attr = static_cast<unsigned int>(MPTCP_PM_ENDPOINT_MAX),
 	.table = mptcp_pm_endpoint_policy.data(),
 };
 
@@ -122,7 +122,7 @@ static std::array<ynl_policy_attr,MPTCP_PM_ATTR_MAX + 1> mptcp_pm_attr_policy = 
 } ();
 
 struct ynl_policy_nest mptcp_pm_attr_nest = {
-	.max_attr = MPTCP_PM_ATTR_MAX,
+	.max_attr = static_cast<unsigned int>(MPTCP_PM_ATTR_MAX),
 	.table = mptcp_pm_attr_policy.data(),
 };
 

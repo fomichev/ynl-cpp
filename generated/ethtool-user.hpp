@@ -23,6 +23,7 @@
 #include <linux/ethtool.h>
 #include <linux/ethtool.h>
 #include <linux/ethtool.h>
+#include <linux/ethtool.h>
 
 namespace ynl_cpp {
 const struct ynl_family& get_ynl_ethtool_family();
@@ -36,8 +37,10 @@ std::string_view
 ethtool_module_fw_flash_status_str(ethtool_module_fw_flash_status value);
 std::string_view
 ethtool_c33_pse_ext_state_str(ethtool_c33_pse_ext_state value);
-std::string_view ethtool_phy_upstream_type_str(int value);
+std::string_view ethtool_phy_upstream_type_str(phy_upstream value);
 std::string_view ethtool_tcp_data_split_str(ethtool_tcp_data_split value);
+std::string_view ethtool_hwtstamp_source_str(hwtstamp_source value);
+std::string_view ethtool_pse_event_str(ethtool_pse_event value);
 
 /* Common nested types */
 struct ethtool_header {
@@ -941,6 +944,8 @@ struct ethtool_tsinfo_get_rsp {
 	std::optional<__u32> phc_index;
 	std::optional<ethtool_ts_stat> stats;
 	std::optional<ethtool_ts_hwtstamp_provider> hwtstamp_provider;
+	std::optional<enum hwtstamp_source> hwtstamp_source;
+	std::optional<__u32> hwtstamp_phyindex;
 };
 
 /*
@@ -1238,6 +1243,9 @@ struct ethtool_pse_get_rsp {
 	std::optional<__u32> c33_pse_ext_substate;
 	std::optional<__u32> c33_pse_avail_pw_limit;
 	std::vector<ethtool_c33_pse_pw_limit> c33_pse_pw_limit_ranges;
+	std::optional<__u32> pse_pw_d_id;
+	std::optional<__u32> pse_prio_max;
+	std::optional<__u32> pse_prio;
 };
 
 /*
@@ -1265,6 +1273,7 @@ struct ethtool_pse_set_req {
 	std::optional<__u32> podl_pse_admin_control;
 	std::optional<__u32> c33_pse_admin_control;
 	std::optional<__u32> c33_pse_avail_pw_limit;
+	std::optional<__u32> pse_prio;
 };
 
 /*
@@ -1306,6 +1315,10 @@ struct ethtool_rss_get_list {
 
 std::unique_ptr<ethtool_rss_get_list>
 ethtool_rss_get_dump(ynl_cpp::ynl_socket&  ys, ethtool_rss_get_req_dump& req);
+
+/* ETHTOOL_MSG_RSS_GET - notify */
+struct ethtool_rss_get_ntf {
+};
 
 /* ============== ETHTOOL_MSG_PLCA_GET_CFG ============== */
 /* ETHTOOL_MSG_PLCA_GET_CFG - do */
@@ -1488,7 +1501,7 @@ struct ethtool_phy_get_rsp {
 	std::optional<__u32> index;
 	std::string drvname;
 	std::string name;
-	std::optional<int> upstream_type;
+	std::optional<phy_upstream> upstream_type;
 	std::optional<__u32> upstream_index;
 	std::string upstream_sfp_name;
 	std::string downstream_sfp_name;
@@ -1527,7 +1540,7 @@ struct ethtool_tsconfig_get_rsp {
 	std::optional<ethtool_ts_hwtstamp_provider> hwtstamp_provider;
 	std::optional<ethtool_bitset> tx_types;
 	std::optional<ethtool_bitset> rx_filters;
-	std::optional<__u32> hwtstamp_flags;
+	std::optional<ethtool_bitset> hwtstamp_flags;
 };
 
 /*
@@ -1556,7 +1569,7 @@ struct ethtool_tsconfig_set_req {
 	std::optional<ethtool_ts_hwtstamp_provider> hwtstamp_provider;
 	std::optional<ethtool_bitset> tx_types;
 	std::optional<ethtool_bitset> rx_filters;
-	std::optional<__u32> hwtstamp_flags;
+	std::optional<ethtool_bitset> hwtstamp_flags;
 };
 
 struct ethtool_tsconfig_set_rsp {
@@ -1564,7 +1577,7 @@ struct ethtool_tsconfig_set_rsp {
 	std::optional<ethtool_ts_hwtstamp_provider> hwtstamp_provider;
 	std::optional<ethtool_bitset> tx_types;
 	std::optional<ethtool_bitset> rx_filters;
-	std::optional<__u32> hwtstamp_flags;
+	std::optional<ethtool_bitset> hwtstamp_flags;
 };
 
 /*
@@ -1602,6 +1615,15 @@ struct ethtool_module_fw_flash_ntf_rsp {
 };
 
 struct ethtool_module_fw_flash_ntf {
+};
+
+/* ETHTOOL_MSG_PSE_NTF - event */
+struct ethtool_pse_ntf_rsp {
+	std::optional<ethtool_header> header;
+	std::optional<__u64> events;
+};
+
+struct ethtool_pse_ntf {
 };
 
 } //namespace ynl_cpp

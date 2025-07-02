@@ -14,8 +14,8 @@
 namespace ynl_cpp {
 
 /* Enums */
-static constexpr std::array<std::string_view, NETDEV_CMD_NAPI_SET + 1> netdev_op_strmap = []() {
-	std::array<std::string_view, NETDEV_CMD_NAPI_SET + 1> arr{};
+static constexpr std::array<std::string_view, NETDEV_CMD_BIND_TX + 1> netdev_op_strmap = []() {
+	std::array<std::string_view, NETDEV_CMD_BIND_TX + 1> arr{};
 	arr[NETDEV_CMD_DEV_GET] = "dev-get";
 	arr[NETDEV_CMD_DEV_ADD_NTF] = "dev-add-ntf";
 	arr[NETDEV_CMD_DEV_DEL_NTF] = "dev-del-ntf";
@@ -30,6 +30,7 @@ static constexpr std::array<std::string_view, NETDEV_CMD_NAPI_SET + 1> netdev_op
 	arr[NETDEV_CMD_QSTATS_GET] = "qstats-get";
 	arr[NETDEV_CMD_BIND_RX] = "bind-rx";
 	arr[NETDEV_CMD_NAPI_SET] = "napi-set";
+	arr[NETDEV_CMD_BIND_TX] = "bind-tx";
 	return arr;
 } ();
 
@@ -76,10 +77,11 @@ std::string_view netdev_xdp_rx_metadata_str(netdev_xdp_rx_metadata value)
 	return netdev_xdp_rx_metadata_strmap[value];
 }
 
-static constexpr std::array<std::string_view, 1 + 1> netdev_xsk_flags_strmap = []() {
-	std::array<std::string_view, 1 + 1> arr{};
+static constexpr std::array<std::string_view, 2 + 1> netdev_xsk_flags_strmap = []() {
+	std::array<std::string_view, 2 + 1> arr{};
 	arr[0] = "tx-timestamp";
 	arr[1] = "tx-checksum";
+	arr[2] = "tx-launch-time-fifo";
 	return arr;
 } ();
 
@@ -120,6 +122,16 @@ std::string_view netdev_qstats_scope_str(netdev_qstats_scope value)
 }
 
 /* Policies */
+static std::array<ynl_policy_attr,NETDEV_A_IO_URING_PROVIDER_INFO_MAX + 1> netdev_io_uring_provider_info_policy = []() {
+	std::array<ynl_policy_attr,NETDEV_A_IO_URING_PROVIDER_INFO_MAX + 1> arr{};
+	return arr;
+} ();
+
+struct ynl_policy_nest netdev_io_uring_provider_info_nest = {
+	.max_attr = static_cast<unsigned int>(NETDEV_A_IO_URING_PROVIDER_INFO_MAX),
+	.table = netdev_io_uring_provider_info_policy.data(),
+};
+
 static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> netdev_page_pool_info_policy = []() {
 	std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> arr{};
 	arr[NETDEV_A_PAGE_POOL_ID].name = "id";
@@ -130,8 +142,18 @@ static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> netdev_page_pool_i
 } ();
 
 struct ynl_policy_nest netdev_page_pool_info_nest = {
-	.max_attr = NETDEV_A_PAGE_POOL_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_PAGE_POOL_MAX),
 	.table = netdev_page_pool_info_policy.data(),
+};
+
+static std::array<ynl_policy_attr,NETDEV_A_XSK_INFO_MAX + 1> netdev_xsk_info_policy = []() {
+	std::array<ynl_policy_attr,NETDEV_A_XSK_INFO_MAX + 1> arr{};
+	return arr;
+} ();
+
+struct ynl_policy_nest netdev_xsk_info_nest = {
+	.max_attr = static_cast<unsigned int>(NETDEV_A_XSK_INFO_MAX),
+	.table = netdev_xsk_info_policy.data(),
 };
 
 static std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> netdev_queue_id_policy = []() {
@@ -144,7 +166,7 @@ static std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> netdev_queue_id_policy
 } ();
 
 struct ynl_policy_nest netdev_queue_id_nest = {
-	.max_attr = NETDEV_A_QUEUE_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_QUEUE_MAX),
 	.table = netdev_queue_id_policy.data(),
 };
 
@@ -166,7 +188,7 @@ static std::array<ynl_policy_attr,NETDEV_A_DEV_MAX + 1> netdev_dev_policy = []()
 } ();
 
 struct ynl_policy_nest netdev_dev_nest = {
-	.max_attr = NETDEV_A_DEV_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_DEV_MAX),
 	.table = netdev_dev_policy.data(),
 };
 
@@ -186,11 +208,14 @@ static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_MAX + 1> netdev_page_pool_p
 	arr[NETDEV_A_PAGE_POOL_DETACH_TIME].type = YNL_PT_UINT;
 	arr[NETDEV_A_PAGE_POOL_DMABUF].name = "dmabuf";
 	arr[NETDEV_A_PAGE_POOL_DMABUF].type = YNL_PT_U32;
+	arr[NETDEV_A_PAGE_POOL_IO_URING].name = "io-uring";
+	arr[NETDEV_A_PAGE_POOL_IO_URING].type = YNL_PT_NEST;
+	arr[NETDEV_A_PAGE_POOL_IO_URING].nest = &netdev_io_uring_provider_info_nest;
 	return arr;
 } ();
 
 struct ynl_policy_nest netdev_page_pool_nest = {
-	.max_attr = NETDEV_A_PAGE_POOL_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_PAGE_POOL_MAX),
 	.table = netdev_page_pool_policy.data(),
 };
 
@@ -225,7 +250,7 @@ static std::array<ynl_policy_attr,NETDEV_A_PAGE_POOL_STATS_MAX + 1> netdev_page_
 } ();
 
 struct ynl_policy_nest netdev_page_pool_stats_nest = {
-	.max_attr = NETDEV_A_PAGE_POOL_STATS_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_PAGE_POOL_STATS_MAX),
 	.table = netdev_page_pool_stats_policy.data(),
 };
 
@@ -241,11 +266,17 @@ static std::array<ynl_policy_attr,NETDEV_A_QUEUE_MAX + 1> netdev_queue_policy = 
 	arr[NETDEV_A_QUEUE_NAPI_ID].type = YNL_PT_U32;
 	arr[NETDEV_A_QUEUE_DMABUF].name = "dmabuf";
 	arr[NETDEV_A_QUEUE_DMABUF].type = YNL_PT_U32;
+	arr[NETDEV_A_QUEUE_IO_URING].name = "io-uring";
+	arr[NETDEV_A_QUEUE_IO_URING].type = YNL_PT_NEST;
+	arr[NETDEV_A_QUEUE_IO_URING].nest = &netdev_io_uring_provider_info_nest;
+	arr[NETDEV_A_QUEUE_XSK].name = "xsk";
+	arr[NETDEV_A_QUEUE_XSK].type = YNL_PT_NEST;
+	arr[NETDEV_A_QUEUE_XSK].nest = &netdev_xsk_info_nest;
 	return arr;
 } ();
 
 struct ynl_policy_nest netdev_queue_nest = {
-	.max_attr = NETDEV_A_QUEUE_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_QUEUE_MAX),
 	.table = netdev_queue_policy.data(),
 };
 
@@ -269,7 +300,7 @@ static std::array<ynl_policy_attr,NETDEV_A_NAPI_MAX + 1> netdev_napi_policy = []
 } ();
 
 struct ynl_policy_nest netdev_napi_nest = {
-	.max_attr = NETDEV_A_NAPI_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_NAPI_MAX),
 	.table = netdev_napi_policy.data(),
 };
 
@@ -341,7 +372,7 @@ static std::array<ynl_policy_attr,NETDEV_A_QSTATS_MAX + 1> netdev_qstats_policy 
 } ();
 
 struct ynl_policy_nest netdev_qstats_nest = {
-	.max_attr = NETDEV_A_QSTATS_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_QSTATS_MAX),
 	.table = netdev_qstats_policy.data(),
 };
 
@@ -360,11 +391,24 @@ static std::array<ynl_policy_attr,NETDEV_A_DMABUF_MAX + 1> netdev_dmabuf_policy 
 } ();
 
 struct ynl_policy_nest netdev_dmabuf_nest = {
-	.max_attr = NETDEV_A_DMABUF_MAX,
+	.max_attr = static_cast<unsigned int>(NETDEV_A_DMABUF_MAX),
 	.table = netdev_dmabuf_policy.data(),
 };
 
 /* Common nested types */
+int netdev_io_uring_provider_info_parse(struct ynl_parse_arg *yarg,
+					const struct nlattr *nested)
+{
+	netdev_io_uring_provider_info *dst = (netdev_io_uring_provider_info *)yarg->data;
+	const struct nlattr *attr;
+
+	ynl_attr_for_each_nested(attr, nested) {
+		unsigned int type = ynl_attr_type(attr);
+	}
+
+	return 0;
+}
+
 int netdev_page_pool_info_put(struct nlmsghdr *nlh, unsigned int attr_type,
 			      const netdev_page_pool_info&  obj)
 {
@@ -398,6 +442,19 @@ int netdev_page_pool_info_parse(struct ynl_parse_arg *yarg,
 				return YNL_PARSE_CB_ERROR;
 			dst->ifindex = (__u32)ynl_attr_get_u32(attr);
 		}
+	}
+
+	return 0;
+}
+
+int netdev_xsk_info_parse(struct ynl_parse_arg *yarg,
+			  const struct nlattr *nested)
+{
+	netdev_xsk_info *dst = (netdev_xsk_info *)yarg->data;
+	const struct nlattr *attr;
+
+	ynl_attr_for_each_nested(attr, nested) {
+		unsigned int type = ynl_attr_type(attr);
 	}
 
 	return 0;
@@ -517,8 +574,10 @@ int netdev_page_pool_get_rsp_parse(const struct nlmsghdr *nlh,
 {
 	netdev_page_pool_get_rsp *dst;
 	const struct nlattr *attr;
+	struct ynl_parse_arg parg;
 
 	dst = (netdev_page_pool_get_rsp*)yarg->data;
+	parg.ys = yarg->ys;
 
 	ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
 		unsigned int type = ynl_attr_type(attr);
@@ -551,6 +610,14 @@ int netdev_page_pool_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
 			dst->dmabuf = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == NETDEV_A_PAGE_POOL_IO_URING) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+
+			parg.rsp_policy = &netdev_io_uring_provider_info_nest;
+			parg.data = &dst->io_uring;
+			if (netdev_io_uring_provider_info_parse(&parg, attr))
+				return YNL_PARSE_CB_ERROR;
 		}
 	}
 
@@ -743,8 +810,10 @@ int netdev_queue_get_rsp_parse(const struct nlmsghdr *nlh,
 {
 	netdev_queue_get_rsp *dst;
 	const struct nlattr *attr;
+	struct ynl_parse_arg parg;
 
 	dst = (netdev_queue_get_rsp*)yarg->data;
+	parg.ys = yarg->ys;
 
 	ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
 		unsigned int type = ynl_attr_type(attr);
@@ -769,6 +838,22 @@ int netdev_queue_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
 			dst->dmabuf = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == NETDEV_A_QUEUE_IO_URING) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+
+			parg.rsp_policy = &netdev_io_uring_provider_info_nest;
+			parg.data = &dst->io_uring;
+			if (netdev_io_uring_provider_info_parse(&parg, attr))
+				return YNL_PARSE_CB_ERROR;
+		} else if (type == NETDEV_A_QUEUE_XSK) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+
+			parg.rsp_policy = &netdev_xsk_info_nest;
+			parg.data = &dst->xsk;
+			if (netdev_xsk_info_parse(&parg, attr))
+				return YNL_PARSE_CB_ERROR;
 		}
 	}
 
@@ -1097,32 +1182,72 @@ int netdev_napi_set(ynl_cpp::ynl_socket&  ys, netdev_napi_set_req& req)
 	return 0;
 }
 
+/* ============== NETDEV_CMD_BIND_TX ============== */
+/* NETDEV_CMD_BIND_TX - do */
+int netdev_bind_tx_rsp_parse(const struct nlmsghdr *nlh,
+			     struct ynl_parse_arg *yarg)
+{
+	const struct nlattr *attr;
+	netdev_bind_tx_rsp *dst;
+
+	dst = (netdev_bind_tx_rsp*)yarg->data;
+
+	ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
+		unsigned int type = ynl_attr_type(attr);
+
+		if (type == NETDEV_A_DMABUF_ID) {
+			if (ynl_attr_validate(yarg, attr))
+				return YNL_PARSE_CB_ERROR;
+			dst->id = (__u32)ynl_attr_get_u32(attr);
+		}
+	}
+
+	return YNL_PARSE_CB_OK;
+}
+
+std::unique_ptr<netdev_bind_tx_rsp>
+netdev_bind_tx(ynl_cpp::ynl_socket&  ys, netdev_bind_tx_req& req)
+{
+	struct ynl_req_state yrs = { .yarg = { .ys = ys, }, };
+	std::unique_ptr<netdev_bind_tx_rsp> rsp;
+	struct nlmsghdr *nlh;
+	int err;
+
+	nlh = ynl_gemsg_start_req(ys, ((struct ynl_sock*)ys)->family_id, NETDEV_CMD_BIND_TX, 1);
+	((struct ynl_sock*)ys)->req_policy = &netdev_dmabuf_nest;
+	yrs.yarg.rsp_policy = &netdev_dmabuf_nest;
+
+	if (req.ifindex.has_value())
+		ynl_attr_put_u32(nlh, NETDEV_A_DMABUF_IFINDEX, req.ifindex.value());
+	if (req.fd.has_value())
+		ynl_attr_put_u32(nlh, NETDEV_A_DMABUF_FD, req.fd.value());
+
+	rsp.reset(new netdev_bind_tx_rsp());
+	yrs.yarg.data = rsp.get();
+	yrs.cb = netdev_bind_tx_rsp_parse;
+	yrs.rsp_cmd = NETDEV_CMD_BIND_TX;
+
+	err = ynl_exec(ys, nlh, &yrs);
+	if (err < 0)
+		return nullptr;
+
+	return rsp;
+}
+
 static constexpr std::array<ynl_ntf_info, NETDEV_CMD_PAGE_POOL_CHANGE_NTF + 1> netdev_ntf_info = []() {
 	std::array<ynl_ntf_info, NETDEV_CMD_PAGE_POOL_CHANGE_NTF + 1> arr{};
-	arr[NETDEV_CMD_DEV_ADD_NTF] =  {
-		.cb		= netdev_dev_get_rsp_parse,
-		.policy		= &netdev_dev_nest,
-	};
-	arr[NETDEV_CMD_DEV_DEL_NTF] =  {
-		.cb		= netdev_dev_get_rsp_parse,
-		.policy		= &netdev_dev_nest,
-	};
-	arr[NETDEV_CMD_DEV_CHANGE_NTF] =  {
-		.cb		= netdev_dev_get_rsp_parse,
-		.policy		= &netdev_dev_nest,
-	};
-	arr[NETDEV_CMD_PAGE_POOL_ADD_NTF] =  {
-		.cb		= netdev_page_pool_get_rsp_parse,
-		.policy		= &netdev_page_pool_nest,
-	};
-	arr[NETDEV_CMD_PAGE_POOL_DEL_NTF] =  {
-		.cb		= netdev_page_pool_get_rsp_parse,
-		.policy		= &netdev_page_pool_nest,
-	};
-	arr[NETDEV_CMD_PAGE_POOL_CHANGE_NTF] =  {
-		.cb		= netdev_page_pool_get_rsp_parse,
-		.policy		= &netdev_page_pool_nest,
-	};
+	arr[NETDEV_CMD_DEV_ADD_NTF].policy		= &netdev_dev_nest;
+	arr[NETDEV_CMD_DEV_ADD_NTF].cb		= netdev_dev_get_rsp_parse;
+	arr[NETDEV_CMD_DEV_DEL_NTF].policy		= &netdev_dev_nest;
+	arr[NETDEV_CMD_DEV_DEL_NTF].cb		= netdev_dev_get_rsp_parse;
+	arr[NETDEV_CMD_DEV_CHANGE_NTF].policy		= &netdev_dev_nest;
+	arr[NETDEV_CMD_DEV_CHANGE_NTF].cb		= netdev_dev_get_rsp_parse;
+	arr[NETDEV_CMD_PAGE_POOL_ADD_NTF].policy		= &netdev_page_pool_nest;
+	arr[NETDEV_CMD_PAGE_POOL_ADD_NTF].cb		= netdev_page_pool_get_rsp_parse;
+	arr[NETDEV_CMD_PAGE_POOL_DEL_NTF].policy		= &netdev_page_pool_nest;
+	arr[NETDEV_CMD_PAGE_POOL_DEL_NTF].cb		= netdev_page_pool_get_rsp_parse;
+	arr[NETDEV_CMD_PAGE_POOL_CHANGE_NTF].policy		= &netdev_page_pool_nest;
+	arr[NETDEV_CMD_PAGE_POOL_CHANGE_NTF].cb		= netdev_page_pool_get_rsp_parse;
 	return arr;
 } ();
 

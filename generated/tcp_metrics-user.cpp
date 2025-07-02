@@ -49,7 +49,7 @@ static std::array<ynl_policy_attr,TCP_METRICS_A_METRICS_MAX + 1> tcp_metrics_met
 } ();
 
 struct ynl_policy_nest tcp_metrics_metrics_nest = {
-	.max_attr = TCP_METRICS_A_METRICS_MAX,
+	.max_attr = static_cast<unsigned int>(TCP_METRICS_A_METRICS_MAX),
 	.table = tcp_metrics_metrics_policy.data(),
 };
 
@@ -86,7 +86,7 @@ static std::array<ynl_policy_attr,TCP_METRICS_ATTR_MAX + 1> tcp_metrics_policy =
 } ();
 
 struct ynl_policy_nest tcp_metrics_nest = {
-	.max_attr = TCP_METRICS_ATTR_MAX,
+	.max_attr = static_cast<unsigned int>(TCP_METRICS_ATTR_MAX),
 	.table = tcp_metrics_policy.data(),
 };
 

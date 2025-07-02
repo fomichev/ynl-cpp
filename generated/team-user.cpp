@@ -52,7 +52,7 @@ static std::array<ynl_policy_attr,TEAM_ATTR_OPTION_MAX + 1> team_attr_option_pol
 } ();
 
 struct ynl_policy_nest team_attr_option_nest = {
-	.max_attr = TEAM_ATTR_OPTION_MAX,
+	.max_attr = static_cast<unsigned int>(TEAM_ATTR_OPTION_MAX),
 	.table = team_attr_option_policy.data(),
 };
 
@@ -76,7 +76,7 @@ static std::array<ynl_policy_attr,TEAM_ATTR_PORT_MAX + 1> team_attr_port_policy 
 } ();
 
 struct ynl_policy_nest team_attr_port_nest = {
-	.max_attr = TEAM_ATTR_PORT_MAX,
+	.max_attr = static_cast<unsigned int>(TEAM_ATTR_PORT_MAX),
 	.table = team_attr_port_policy.data(),
 };
 
@@ -91,7 +91,7 @@ static std::array<ynl_policy_attr,TEAM_ATTR_ITEM_OPTION_MAX + 1> team_item_optio
 } ();
 
 struct ynl_policy_nest team_item_option_nest = {
-	.max_attr = TEAM_ATTR_ITEM_OPTION_MAX,
+	.max_attr = static_cast<unsigned int>(TEAM_ATTR_ITEM_OPTION_MAX),
 	.table = team_item_option_policy.data(),
 };
 
@@ -106,7 +106,7 @@ static std::array<ynl_policy_attr,TEAM_ATTR_ITEM_PORT_MAX + 1> team_item_port_po
 } ();
 
 struct ynl_policy_nest team_item_port_nest = {
-	.max_attr = TEAM_ATTR_ITEM_PORT_MAX,
+	.max_attr = static_cast<unsigned int>(TEAM_ATTR_ITEM_PORT_MAX),
 	.table = team_item_port_policy.data(),
 };
 
@@ -126,7 +126,7 @@ static std::array<ynl_policy_attr,TEAM_ATTR_MAX + 1> team_policy = []() {
 } ();
 
 struct ynl_policy_nest team_nest = {
-	.max_attr = TEAM_ATTR_MAX,
+	.max_attr = static_cast<unsigned int>(TEAM_ATTR_MAX),
 	.table = team_policy.data(),
 };
 

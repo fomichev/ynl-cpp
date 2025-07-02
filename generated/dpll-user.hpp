@@ -35,6 +35,7 @@ std::string_view dpll_pin_type_str(dpll_pin_type value);
 std::string_view dpll_pin_direction_str(dpll_pin_direction value);
 std::string_view dpll_pin_state_str(dpll_pin_state value);
 std::string_view dpll_pin_capabilities_str(dpll_pin_capabilities value);
+std::string_view dpll_feature_state_str(dpll_feature_state value);
 
 /* Common nested types */
 struct dpll_frequency_range {
@@ -52,6 +53,11 @@ struct dpll_pin_parent_device {
 
 struct dpll_pin_parent_pin {
 	std::optional<__u32> parent_id;
+	std::optional<dpll_pin_state> state;
+};
+
+struct dpll_reference_sync {
+	std::optional<__u32> id;
 	std::optional<dpll_pin_state> state;
 };
 
@@ -90,6 +96,7 @@ struct dpll_device_get_rsp {
 	std::optional<__s32> temp;
 	std::optional<__u64> clock_id;
 	std::optional<dpll_type> type;
+	std::optional<dpll_feature_state> phase_offset_monitor;
 };
 
 /*
@@ -115,6 +122,7 @@ struct dpll_device_get_ntf {
 /* DPLL_CMD_DEVICE_SET - do */
 struct dpll_device_set_req {
 	std::optional<__u32> id;
+	std::optional<dpll_feature_state> phase_offset_monitor;
 };
 
 /*
@@ -168,6 +176,7 @@ struct dpll_pin_get_rsp {
 	std::optional<__u64> esync_frequency;
 	std::vector<dpll_frequency_range> esync_frequency_supported;
 	std::optional<__u32> esync_pulse;
+	std::vector<dpll_reference_sync> reference_sync;
 };
 
 /*
@@ -211,6 +220,7 @@ struct dpll_pin_set_req {
 	std::vector<dpll_pin_parent_pin> parent_pin;
 	std::optional<__s32> phase_adjust;
 	std::optional<__u64> esync_frequency;
+	std::vector<dpll_reference_sync> reference_sync;
 };
 
 /*
