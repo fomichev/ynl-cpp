@@ -1563,7 +1563,7 @@ def put_typol(cw, struct):
     cw.nl()
 
     cw.block_start(line=f"struct ynl_policy_nest {struct.render_name}_nest =")
-    cw.p(f".max_attr = {type_max},")
+    cw.p(f".max_attr = static_cast<unsigned int>({type_max}),")
     cw.p(f".table = {struct.render_name}_policy.data(),")
     cw.block_end(line=";")
     cw.nl()
@@ -2082,12 +2082,10 @@ def policy_should_be_static(family):
 
 
 def _render_user_ntf_entry(ri, op):
-    ri.cw.block_start(line=f"arr[{op.enum_name}] = ")
-    # ri.cw.p(f".alloc_sz\t= sizeof({type_name(ri, 'event')}),")
-    ri.cw.p(f".cb\t\t= {op_prefix(ri, 'reply', deref=True)}_parse,")
-    ri.cw.p(f".policy\t\t= &{ri.struct['reply'].render_name}_nest,")
-    # ri.cw.p(f".free\t\t= (void *){op_prefix(ri, 'notify')}_free,")
-    ri.cw.block_end(line=";")
+    ri.cw.p(f"arr[{op.enum_name}].policy\t\t= &{ri.struct['reply'].render_name}_nest;")
+    ri.cw.p(f"arr[{op.enum_name}].cb\t\t= {op_prefix(ri, 'reply', deref=True)}_parse;")
+    # ri.cw.p(f"arr[{op.enum_name}].alloc_sz\t= sizeof({type_name(ri, 'event')});")
+    # ri.cw.p(f"arr[{op.enum_name}].free\t\t= (void *){op_prefix(ri, 'notify')}_free;")
 
 
 def render_user_family(family, cw, prototype):
