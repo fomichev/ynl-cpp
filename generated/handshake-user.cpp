@@ -187,7 +187,7 @@ int handshake_accept_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == HANDSHAKE_A_ACCEPT_MESSAGE_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->message_type = (handshake_msg_type)ynl_attr_get_u32(attr);
+			dst->message_type = (enum handshake_msg_type)ynl_attr_get_u32(attr);
 		} else if (type == HANDSHAKE_A_ACCEPT_TIMEOUT) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -195,7 +195,7 @@ int handshake_accept_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == HANDSHAKE_A_ACCEPT_AUTH_MODE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->auth_mode = (handshake_auth)ynl_attr_get_u32(attr);
+			dst->auth_mode = (enum handshake_auth)ynl_attr_get_u32(attr);
 		} else if (type == HANDSHAKE_A_ACCEPT_PEER_IDENTITY) {
 			n_peer_identity++;
 		} else if (type == HANDSHAKE_A_ACCEPT_CERTIFICATE) {

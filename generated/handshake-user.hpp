@@ -39,14 +39,14 @@ struct handshake_x509 {
 /* ============== HANDSHAKE_CMD_ACCEPT ============== */
 /* HANDSHAKE_CMD_ACCEPT - do */
 struct handshake_accept_req {
-	std::optional<handshake_handler_class> handler_class;
+	std::optional<enum handshake_handler_class> handler_class;
 };
 
 struct handshake_accept_rsp {
 	std::optional<__s32> sockfd;
-	std::optional<handshake_msg_type> message_type;
+	std::optional<enum handshake_msg_type> message_type;
 	std::optional<__u32> timeout;
-	std::optional<handshake_auth> auth_mode;
+	std::optional<enum handshake_auth> auth_mode;
 	std::vector<__u32> peer_identity;
 	std::vector<handshake_x509> certificate;
 	std::string peername;

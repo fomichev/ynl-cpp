@@ -104,13 +104,13 @@ struct psp_key_rotate_ntf {
 /* PSP_CMD_RX_ASSOC - do */
 struct psp_rx_assoc_req {
 	std::optional<__u32> dev_id;
-	std::optional<psp_version> version;
+	std::optional<enum psp_version> version;
 	std::optional<__u32> sock_fd;
 };
 
 struct psp_rx_assoc_rsp {
 	std::optional<__u32> dev_id;
-	std::optional<psp_version> version;
+	std::optional<enum psp_version> version;
 	std::optional<psp_keys> rx_key;
 };
 
@@ -124,7 +124,7 @@ psp_rx_assoc(ynl_cpp::ynl_socket&  ys, psp_rx_assoc_req& req);
 /* PSP_CMD_TX_ASSOC - do */
 struct psp_tx_assoc_req {
 	std::optional<__u32> dev_id;
-	std::optional<psp_version> version;
+	std::optional<enum psp_version> version;
 	std::optional<psp_keys> tx_key;
 	std::optional<__u32> sock_fd;
 };

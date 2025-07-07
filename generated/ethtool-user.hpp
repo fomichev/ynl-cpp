@@ -595,7 +595,7 @@ struct ethtool_rings_get_rsp {
 	std::optional<__u32> rx_jumbo;
 	std::optional<__u32> tx;
 	std::optional<__u32> rx_buf_len;
-	std::optional<ethtool_tcp_data_split> tcp_data_split;
+	std::optional<enum ethtool_tcp_data_split> tcp_data_split;
 	std::optional<__u32> cqe_size;
 	std::optional<__u8> tx_push;
 	std::optional<__u8> rx_push;
@@ -641,7 +641,7 @@ struct ethtool_rings_set_req {
 	std::optional<__u32> rx_jumbo;
 	std::optional<__u32> tx;
 	std::optional<__u32> rx_buf_len;
-	std::optional<ethtool_tcp_data_split> tcp_data_split;
+	std::optional<enum ethtool_tcp_data_split> tcp_data_split;
 	std::optional<__u32> cqe_size;
 	std::optional<__u8> tx_push;
 	std::optional<__u8> rx_push;
@@ -1239,7 +1239,7 @@ struct ethtool_pse_get_rsp {
 	std::optional<__u32> c33_pse_pw_d_status;
 	std::optional<__u32> c33_pse_pw_class;
 	std::optional<__u32> c33_pse_actual_pw;
-	std::optional<ethtool_c33_pse_ext_state> c33_pse_ext_state;
+	std::optional<enum ethtool_c33_pse_ext_state> c33_pse_ext_state;
 	std::optional<__u32> c33_pse_ext_substate;
 	std::optional<__u32> c33_pse_avail_pw_limit;
 	std::vector<ethtool_c33_pse_pw_limit> c33_pse_pw_limit_ranges;
@@ -1501,7 +1501,7 @@ struct ethtool_phy_get_rsp {
 	std::optional<__u32> index;
 	std::string drvname;
 	std::string name;
-	std::optional<phy_upstream> upstream_type;
+	std::optional<enum phy_upstream> upstream_type;
 	std::optional<__u32> upstream_index;
 	std::string upstream_sfp_name;
 	std::string downstream_sfp_name;
@@ -1608,7 +1608,7 @@ struct ethtool_cable_test_tdr_ntf {
 /* ETHTOOL_MSG_MODULE_FW_FLASH_NTF - event */
 struct ethtool_module_fw_flash_ntf_rsp {
 	std::optional<ethtool_header> header;
-	std::optional<ethtool_module_fw_flash_status> status;
+	std::optional<enum ethtool_module_fw_flash_status> status;
 	std::string status_msg;
 	std::optional<__u64> done;
 	std::optional<__u64> total;

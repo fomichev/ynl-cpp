@@ -376,7 +376,7 @@ int psp_rx_assoc_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == PSP_A_ASSOC_VERSION) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->version = (psp_version)ynl_attr_get_u32(attr);
+			dst->version = (enum psp_version)ynl_attr_get_u32(attr);
 		} else if (type == PSP_A_ASSOC_RX_KEY) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

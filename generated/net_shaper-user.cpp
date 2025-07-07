@@ -184,7 +184,7 @@ int net_shaper_handle_parse(struct ynl_parse_arg *yarg,
 		if (type == NET_SHAPER_A_HANDLE_SCOPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->scope = (net_shaper_scope)ynl_attr_get_u32(attr);
+			dst->scope = (enum net_shaper_scope)ynl_attr_get_u32(attr);
 		} else if (type == NET_SHAPER_A_HANDLE_ID) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -250,7 +250,7 @@ int net_shaper_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == NET_SHAPER_A_METRIC) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->metric = (net_shaper_metric)ynl_attr_get_u32(attr);
+			dst->metric = (enum net_shaper_metric)ynl_attr_get_u32(attr);
 		} else if (type == NET_SHAPER_A_BW_MIN) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -491,7 +491,7 @@ int net_shaper_cap_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == NET_SHAPER_A_CAPS_SCOPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->scope = (net_shaper_scope)ynl_attr_get_u32(attr);
+			dst->scope = (enum net_shaper_scope)ynl_attr_get_u32(attr);
 		} else if (type == NET_SHAPER_A_CAPS_SUPPORT_METRIC_BPS) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

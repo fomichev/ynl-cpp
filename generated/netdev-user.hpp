@@ -46,7 +46,7 @@ struct netdev_xsk_info {
 
 struct netdev_queue_id {
 	std::optional<__u32> id;
-	std::optional<netdev_queue_type> type;
+	std::optional<enum netdev_queue_type> type;
 };
 
 /* ============== NETDEV_CMD_DEV_GET ============== */
@@ -158,13 +158,13 @@ netdev_page_pool_stats_get_dump(ynl_cpp::ynl_socket&  ys);
 /* NETDEV_CMD_QUEUE_GET - do */
 struct netdev_queue_get_req {
 	std::optional<__u32> ifindex;
-	std::optional<netdev_queue_type> type;
+	std::optional<enum netdev_queue_type> type;
 	std::optional<__u32> id;
 };
 
 struct netdev_queue_get_rsp {
 	std::optional<__u32> id;
-	std::optional<netdev_queue_type> type;
+	std::optional<enum netdev_queue_type> type;
 	std::optional<__u32> napi_id;
 	std::optional<__u32> ifindex;
 	std::optional<__u32> dmabuf;
@@ -233,7 +233,7 @@ struct netdev_qstats_get_req_dump {
 
 struct netdev_qstats_get_rsp_dump {
 	std::optional<__u32> ifindex;
-	std::optional<netdev_queue_type> queue_type;
+	std::optional<enum netdev_queue_type> queue_type;
 	std::optional<__u32> queue_id;
 	std::optional<__u64> rx_packets;
 	std::optional<__u64> rx_bytes;

@@ -16,7 +16,7 @@ TOOL:=../ynl-gen-cpp.py
 GENS_PATHS=$(shell grep -nrI --files-without-match \
 		'protocol: netlink' ../Documentation/netlink/specs/)
 GENS_ALL=$(patsubst ../Documentation/netlink/specs/%.yaml,%,${GENS_PATHS})
-GENS=$(filter-out devlink ovs_datapath ovs_flow ovs_vport nlctrl,${GENS_ALL})
+GENS=$(filter-out nl80211 devlink ovs_datapath ovs_flow ovs_vport nlctrl,${GENS_ALL})
 SRCS=$(patsubst %,%-user.cpp,${GENS})
 HDRS=$(patsubst %,%-user.hpp,${GENS})
 OBJS=$(patsubst %,%-user.cpp.o,${GENS})

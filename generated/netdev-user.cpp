@@ -825,7 +825,7 @@ int netdev_queue_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == NETDEV_A_QUEUE_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->type = (netdev_queue_type)ynl_attr_get_u32(attr);
+			dst->type = (enum netdev_queue_type)ynl_attr_get_u32(attr);
 		} else if (type == NETDEV_A_QUEUE_NAPI_ID) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -1043,7 +1043,7 @@ int netdev_qstats_get_rsp_dump_parse(const struct nlmsghdr *nlh,
 		} else if (type == NETDEV_A_QSTATS_QUEUE_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->queue_type = (netdev_queue_type)ynl_attr_get_u32(attr);
+			dst->queue_type = (enum netdev_queue_type)ynl_attr_get_u32(attr);
 		} else if (type == NETDEV_A_QSTATS_QUEUE_ID) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

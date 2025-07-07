@@ -45,20 +45,20 @@ struct dpll_frequency_range {
 
 struct dpll_pin_parent_device {
 	std::optional<__u32> parent_id;
-	std::optional<dpll_pin_direction> direction;
+	std::optional<enum dpll_pin_direction> direction;
 	std::optional<__u32> prio;
-	std::optional<dpll_pin_state> state;
+	std::optional<enum dpll_pin_state> state;
 	std::optional<__s64> phase_offset;
 };
 
 struct dpll_pin_parent_pin {
 	std::optional<__u32> parent_id;
-	std::optional<dpll_pin_state> state;
+	std::optional<enum dpll_pin_state> state;
 };
 
 struct dpll_reference_sync {
 	std::optional<__u32> id;
-	std::optional<dpll_pin_state> state;
+	std::optional<enum dpll_pin_state> state;
 };
 
 /* ============== DPLL_CMD_DEVICE_ID_GET ============== */
@@ -66,7 +66,7 @@ struct dpll_reference_sync {
 struct dpll_device_id_get_req {
 	std::string module_name;
 	std::optional<__u64> clock_id;
-	std::optional<dpll_type> type;
+	std::optional<enum dpll_type> type;
 };
 
 struct dpll_device_id_get_rsp {
@@ -89,14 +89,14 @@ struct dpll_device_get_req {
 struct dpll_device_get_rsp {
 	std::optional<__u32> id;
 	std::string module_name;
-	std::optional<dpll_mode> mode;
+	std::optional<enum dpll_mode> mode;
 	std::vector<__u32> mode_supported;
-	std::optional<dpll_lock_status> lock_status;
-	std::optional<dpll_lock_status_error> lock_status_error;
+	std::optional<enum dpll_lock_status> lock_status;
+	std::optional<enum dpll_lock_status_error> lock_status_error;
 	std::optional<__s32> temp;
 	std::optional<__u64> clock_id;
-	std::optional<dpll_type> type;
-	std::optional<dpll_feature_state> phase_offset_monitor;
+	std::optional<enum dpll_type> type;
+	std::optional<enum dpll_feature_state> phase_offset_monitor;
 };
 
 /*
@@ -122,7 +122,7 @@ struct dpll_device_get_ntf {
 /* DPLL_CMD_DEVICE_SET - do */
 struct dpll_device_set_req {
 	std::optional<__u32> id;
-	std::optional<dpll_feature_state> phase_offset_monitor;
+	std::optional<enum dpll_feature_state> phase_offset_monitor;
 };
 
 /*
@@ -138,7 +138,7 @@ struct dpll_pin_id_get_req {
 	std::string board_label;
 	std::string panel_label;
 	std::string package_label;
-	std::optional<dpll_pin_type> type;
+	std::optional<enum dpll_pin_type> type;
 };
 
 struct dpll_pin_id_get_rsp {
@@ -163,7 +163,7 @@ struct dpll_pin_get_rsp {
 	std::string board_label;
 	std::string panel_label;
 	std::string package_label;
-	std::optional<dpll_pin_type> type;
+	std::optional<enum dpll_pin_type> type;
 	std::optional<__u64> frequency;
 	std::vector<dpll_frequency_range> frequency_supported;
 	std::optional<__u32> capabilities;
@@ -213,9 +213,9 @@ struct dpll_pin_get_ntf {
 struct dpll_pin_set_req {
 	std::optional<__u32> id;
 	std::optional<__u64> frequency;
-	std::optional<dpll_pin_direction> direction;
+	std::optional<enum dpll_pin_direction> direction;
 	std::optional<__u32> prio;
-	std::optional<dpll_pin_state> state;
+	std::optional<enum dpll_pin_state> state;
 	std::vector<dpll_pin_parent_device> parent_device;
 	std::vector<dpll_pin_parent_pin> parent_pin;
 	std::optional<__s32> phase_adjust;

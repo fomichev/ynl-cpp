@@ -3736,7 +3736,7 @@ int ethtool_rings_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == ETHTOOL_A_RINGS_TCP_DATA_SPLIT) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->tcp_data_split = (ethtool_tcp_data_split)ynl_attr_get_u8(attr);
+			dst->tcp_data_split = (enum ethtool_tcp_data_split)ynl_attr_get_u8(attr);
 		} else if (type == ETHTOOL_A_RINGS_CQE_SIZE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -4695,7 +4695,7 @@ int ethtool_tsinfo_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == ETHTOOL_A_TSINFO_HWTSTAMP_SOURCE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->hwtstamp_source = (hwtstamp_source)ynl_attr_get_u32(attr);
+			dst->hwtstamp_source = (enum hwtstamp_source)ynl_attr_get_u32(attr);
 		} else if (type == ETHTOOL_A_TSINFO_HWTSTAMP_PHYINDEX) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -5542,7 +5542,7 @@ int ethtool_pse_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == ETHTOOL_A_C33_PSE_EXT_STATE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->c33_pse_ext_state = (ethtool_c33_pse_ext_state)ynl_attr_get_u32(attr);
+			dst->c33_pse_ext_state = (enum ethtool_c33_pse_ext_state)ynl_attr_get_u32(attr);
 		} else if (type == ETHTOOL_A_C33_PSE_EXT_SUBSTATE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -6281,7 +6281,7 @@ int ethtool_phy_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == ETHTOOL_A_PHY_UPSTREAM_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->upstream_type = (phy_upstream)ynl_attr_get_u32(attr);
+			dst->upstream_type = (enum phy_upstream)ynl_attr_get_u32(attr);
 		} else if (type == ETHTOOL_A_PHY_UPSTREAM_INDEX) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -6668,7 +6668,7 @@ int ethtool_module_fw_flash_ntf_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == ETHTOOL_A_MODULE_FW_FLASH_STATUS) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->status = (ethtool_module_fw_flash_status)ynl_attr_get_u32(attr);
+			dst->status = (enum ethtool_module_fw_flash_status)ynl_attr_get_u32(attr);
 		} else if (type == ETHTOOL_A_MODULE_FW_FLASH_STATUS_MSG) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;

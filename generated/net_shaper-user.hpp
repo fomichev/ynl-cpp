@@ -31,7 +31,7 @@ std::string_view net_shaper_metric_str(net_shaper_metric value);
 
 /* Common nested types */
 struct net_shaper_handle {
-	std::optional<net_shaper_scope> scope;
+	std::optional<enum net_shaper_scope> scope;
 	std::optional<__u32> id;
 };
 
@@ -52,7 +52,7 @@ struct net_shaper_get_rsp {
 	std::optional<__u32> ifindex;
 	std::optional<net_shaper_handle> parent;
 	std::optional<net_shaper_handle> handle;
-	std::optional<net_shaper_metric> metric;
+	std::optional<enum net_shaper_metric> metric;
 	std::optional<__u64> bw_min;
 	std::optional<__u64> bw_max;
 	std::optional<__u64> burst;
@@ -84,7 +84,7 @@ net_shaper_get_dump(ynl_cpp::ynl_socket&  ys, net_shaper_get_req_dump& req);
 struct net_shaper_set_req {
 	std::optional<__u32> ifindex;
 	std::optional<net_shaper_handle> handle;
-	std::optional<net_shaper_metric> metric;
+	std::optional<enum net_shaper_metric> metric;
 	std::optional<__u64> bw_min;
 	std::optional<__u64> bw_max;
 	std::optional<__u64> burst;
@@ -129,7 +129,7 @@ struct net_shaper_group_req {
 	std::optional<__u32> ifindex;
 	std::optional<net_shaper_handle> parent;
 	std::optional<net_shaper_handle> handle;
-	std::optional<net_shaper_metric> metric;
+	std::optional<enum net_shaper_metric> metric;
 	std::optional<__u64> bw_min;
 	std::optional<__u64> bw_max;
 	std::optional<__u64> burst;
@@ -172,12 +172,12 @@ net_shaper_group(ynl_cpp::ynl_socket&  ys, net_shaper_group_req& req);
 /* NET_SHAPER_CMD_CAP_GET - do */
 struct net_shaper_cap_get_req {
 	std::optional<__u32> ifindex;
-	std::optional<net_shaper_scope> scope;
+	std::optional<enum net_shaper_scope> scope;
 };
 
 struct net_shaper_cap_get_rsp {
 	std::optional<__u32> ifindex;
-	std::optional<net_shaper_scope> scope;
+	std::optional<enum net_shaper_scope> scope;
 	bool support_metric_bps{};
 	bool support_metric_pps{};
 	bool support_nesting{};

@@ -325,7 +325,11 @@ class TypeScalar(Type):
             self.is_bitfield = False
 
         if not self.is_bitfield and "enum" in self.attr:
-            self.type_name = self.family.consts[self.attr["enum"]].user_type
+            user_type = self.family.consts[self.attr["enum"]].user_type
+            if user_type == "int":
+                self.type_name = "int"
+            else:
+                self.type_name = "enum " + user_type
         elif self.is_auto_scalar:
             self.type_name = "__" + self.type[0] + "64"
         else:

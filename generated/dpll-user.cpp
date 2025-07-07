@@ -423,7 +423,7 @@ int dpll_pin_parent_device_parse(struct ynl_parse_arg *yarg,
 		} else if (type == DPLL_A_PIN_DIRECTION) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->direction = (dpll_pin_direction)ynl_attr_get_u32(attr);
+			dst->direction = (enum dpll_pin_direction)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_PIN_PRIO) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -431,7 +431,7 @@ int dpll_pin_parent_device_parse(struct ynl_parse_arg *yarg,
 		} else if (type == DPLL_A_PIN_STATE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->state = (dpll_pin_state)ynl_attr_get_u32(attr);
+			dst->state = (enum dpll_pin_state)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_PIN_PHASE_OFFSET) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -473,7 +473,7 @@ int dpll_pin_parent_pin_parse(struct ynl_parse_arg *yarg,
 		} else if (type == DPLL_A_PIN_STATE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->state = (dpll_pin_state)ynl_attr_get_u32(attr);
+			dst->state = (enum dpll_pin_state)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -511,7 +511,7 @@ int dpll_reference_sync_parse(struct ynl_parse_arg *yarg,
 		} else if (type == DPLL_A_PIN_STATE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->state = (dpll_pin_state)ynl_attr_get_u32(attr);
+			dst->state = (enum dpll_pin_state)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -601,17 +601,17 @@ int dpll_device_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == DPLL_A_MODE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->mode = (dpll_mode)ynl_attr_get_u32(attr);
+			dst->mode = (enum dpll_mode)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_MODE_SUPPORTED) {
 			n_mode_supported++;
 		} else if (type == DPLL_A_LOCK_STATUS) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->lock_status = (dpll_lock_status)ynl_attr_get_u32(attr);
+			dst->lock_status = (enum dpll_lock_status)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_LOCK_STATUS_ERROR) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->lock_status_error = (dpll_lock_status_error)ynl_attr_get_u32(attr);
+			dst->lock_status_error = (enum dpll_lock_status_error)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_TEMP) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
@@ -623,11 +623,11 @@ int dpll_device_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == DPLL_A_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->type = (dpll_type)ynl_attr_get_u32(attr);
+			dst->type = (enum dpll_type)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_PHASE_OFFSET_MONITOR) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->phase_offset_monitor = (dpll_feature_state)ynl_attr_get_u32(attr);
+			dst->phase_offset_monitor = (enum dpll_feature_state)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -832,7 +832,7 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 		} else if (type == DPLL_A_PIN_TYPE) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
-			dst->type = (dpll_pin_type)ynl_attr_get_u32(attr);
+			dst->type = (enum dpll_pin_type)ynl_attr_get_u32(attr);
 		} else if (type == DPLL_A_PIN_FREQUENCY) {
 			if (ynl_attr_validate(yarg, attr))
 				return YNL_PARSE_CB_ERROR;
