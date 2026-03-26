@@ -55,9 +55,9 @@ std::string_view rt_rule_fr_act_str(int value)
 static std::array<ynl_policy_attr,FRA_MAX + 1> rt_rule_fib_rule_attrs_policy = []() {
 	std::array<ynl_policy_attr,FRA_MAX + 1> arr{};
 	arr[FRA_DST].name = "dst";
-	arr[FRA_DST].type = YNL_PT_U32;
+	arr[FRA_DST].type = YNL_PT_BINARY;
 	arr[FRA_SRC].name = "src";
-	arr[FRA_SRC].type = YNL_PT_U32;
+	arr[FRA_SRC].type = YNL_PT_BINARY;
 	arr[FRA_IIFNAME].name = "iifname";
 	arr[FRA_IIFNAME].type  = YNL_PT_NUL_STR;
 	arr[FRA_GOTO].name = "goto";

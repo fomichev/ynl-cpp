@@ -72,10 +72,11 @@ struct nfsd_threads_set_req {
 	std::optional<__u32> gracetime;
 	std::optional<__u32> leasetime;
 	std::string scope;
+	std::optional<__u32> min_threads;
 };
 
 /*
- * set the number of running threads
+ * set the maximum number of running threads
  */
 int nfsd_threads_set(ynl_cpp::ynl_socket& ys, nfsd_threads_set_req& req);
 
@@ -87,10 +88,11 @@ struct nfsd_threads_get_rsp {
 	std::optional<__u32> gracetime;
 	std::optional<__u32> leasetime;
 	std::string scope;
+	std::optional<__u32> min_threads;
 };
 
 /*
- * get the number of running threads
+ * get the maximum number of running threads
  */
 std::unique_ptr<nfsd_threads_get_rsp>
 nfsd_threads_get(ynl_cpp::ynl_socket& ys);

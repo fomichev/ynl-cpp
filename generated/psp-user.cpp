@@ -14,8 +14,8 @@
 namespace ynl_cpp {
 
 /* Enums */
-static constexpr std::array<std::string_view, PSP_CMD_TX_ASSOC + 1> psp_op_strmap = []() {
-	std::array<std::string_view, PSP_CMD_TX_ASSOC + 1> arr{};
+static constexpr std::array<std::string_view, PSP_CMD_GET_STATS + 1> psp_op_strmap = []() {
+	std::array<std::string_view, PSP_CMD_GET_STATS + 1> arr{};
 	arr[PSP_CMD_DEV_GET] = "dev-get";
 	arr[PSP_CMD_DEV_ADD_NTF] = "dev-add-ntf";
 	arr[PSP_CMD_DEV_DEL_NTF] = "dev-del-ntf";
@@ -25,6 +25,7 @@ static constexpr std::array<std::string_view, PSP_CMD_TX_ASSOC + 1> psp_op_strma
 	arr[PSP_CMD_KEY_ROTATE_NTF] = "key-rotate-ntf";
 	arr[PSP_CMD_RX_ASSOC] = "rx-assoc";
 	arr[PSP_CMD_TX_ASSOC] = "tx-assoc";
+	arr[PSP_CMD_GET_STATS] = "get-stats";
 	return arr;
 } ();
 
@@ -106,6 +107,38 @@ static std::array<ynl_policy_attr,PSP_A_ASSOC_MAX + 1> psp_assoc_policy = []() {
 struct ynl_policy_nest psp_assoc_nest = {
 	.max_attr = static_cast<unsigned int>(PSP_A_ASSOC_MAX),
 	.table = psp_assoc_policy.data(),
+};
+
+static std::array<ynl_policy_attr,PSP_A_STATS_MAX + 1> psp_stats_policy = []() {
+	std::array<ynl_policy_attr,PSP_A_STATS_MAX + 1> arr{};
+	arr[PSP_A_STATS_DEV_ID].name = "dev-id";
+	arr[PSP_A_STATS_DEV_ID].type = YNL_PT_U32;
+	arr[PSP_A_STATS_KEY_ROTATIONS].name = "key-rotations";
+	arr[PSP_A_STATS_KEY_ROTATIONS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_STALE_EVENTS].name = "stale-events";
+	arr[PSP_A_STATS_STALE_EVENTS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_PACKETS].name = "rx-packets";
+	arr[PSP_A_STATS_RX_PACKETS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_BYTES].name = "rx-bytes";
+	arr[PSP_A_STATS_RX_BYTES].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_AUTH_FAIL].name = "rx-auth-fail";
+	arr[PSP_A_STATS_RX_AUTH_FAIL].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_ERROR].name = "rx-error";
+	arr[PSP_A_STATS_RX_ERROR].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_RX_BAD].name = "rx-bad";
+	arr[PSP_A_STATS_RX_BAD].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_PACKETS].name = "tx-packets";
+	arr[PSP_A_STATS_TX_PACKETS].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_BYTES].name = "tx-bytes";
+	arr[PSP_A_STATS_TX_BYTES].type = YNL_PT_UINT;
+	arr[PSP_A_STATS_TX_ERROR].name = "tx-error";
+	arr[PSP_A_STATS_TX_ERROR].type = YNL_PT_UINT;
+	return arr;
+} ();
+
+struct ynl_policy_nest psp_stats_nest = {
+	.max_attr = static_cast<unsigned int>(PSP_A_STATS_MAX),
+	.table = psp_stats_policy.data(),
 };
 
 /* Common nested types */
@@ -467,6 +500,94 @@ psp_tx_assoc(ynl_cpp::ynl_socket& ys, psp_tx_assoc_req& req)
 	}
 
 	return rsp;
+}
+
+/* ============== PSP_CMD_GET_STATS ============== */
+/* PSP_CMD_GET_STATS - do */
+int psp_get_stats_rsp_parse(const struct nlmsghdr *nlh,
+			    struct ynl_parse_arg *yarg)
+{
+	const struct nlattr *attr;
+	psp_get_stats_rsp *dst;
+
+	dst = (psp_get_stats_rsp*)yarg->data;
+
+	ynl_attr_for_each(attr, nlh, yarg->ys->family->hdr_len) {
+		unsigned int type = ynl_attr_type(attr);
+
+		if (type == PSP_A_STATS_DEV_ID) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->dev_id = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == PSP_A_STATS_KEY_ROTATIONS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->key_rotations = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == PSP_A_STATS_STALE_EVENTS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->stale_events = (__u64)ynl_attr_get_uint(attr);
+		}
+	}
+
+	return YNL_PARSE_CB_OK;
+}
+
+std::unique_ptr<psp_get_stats_rsp>
+psp_get_stats(ynl_cpp::ynl_socket& ys, psp_get_stats_req& req)
+{
+	struct ynl_req_state yrs = { .yarg = { .ys = ys, }, };
+	std::unique_ptr<psp_get_stats_rsp> rsp;
+	struct nlmsghdr *nlh;
+	int err;
+
+	nlh = ynl_gemsg_start_req(ys, ((struct ynl_sock*)ys)->family_id, PSP_CMD_GET_STATS, 1);
+	((struct ynl_sock*)ys)->req_policy = &psp_stats_nest;
+	yrs.yarg.rsp_policy = &psp_stats_nest;
+
+	if (req.dev_id.has_value()) {
+		ynl_attr_put_u32(nlh, PSP_A_STATS_DEV_ID, req.dev_id.value());
+	}
+
+	rsp.reset(new psp_get_stats_rsp());
+	yrs.yarg.data = rsp.get();
+	yrs.cb = psp_get_stats_rsp_parse;
+	yrs.rsp_cmd = PSP_CMD_GET_STATS;
+
+	err = ynl_exec(ys, nlh, &yrs);
+	if (err < 0) {
+		return nullptr;
+	}
+
+	return rsp;
+}
+
+/* PSP_CMD_GET_STATS - dump */
+std::unique_ptr<psp_get_stats_list> psp_get_stats_dump(ynl_cpp::ynl_socket& ys)
+{
+	struct ynl_dump_no_alloc_state yds = {};
+	struct nlmsghdr *nlh;
+	int err;
+
+	auto ret = std::make_unique<psp_get_stats_list>();
+	yds.yarg.ys = ys;
+	yds.yarg.rsp_policy = &psp_stats_nest;
+	yds.yarg.data = ret.get();
+	yds.alloc_cb = [](void* arg)->void* {return &(static_cast<psp_get_stats_list*>(arg)->objs.emplace_back());};
+	yds.cb = psp_get_stats_rsp_parse;
+	yds.rsp_cmd = PSP_CMD_GET_STATS;
+
+	nlh = ynl_gemsg_start_dump(ys, ((struct ynl_sock*)ys)->family_id, PSP_CMD_GET_STATS, 1);
+
+	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
+	if (err < 0) {
+		return nullptr;
+	}
+
+	return ret;
 }
 
 static constexpr std::array<ynl_ntf_info, PSP_CMD_KEY_ROTATE_NTF + 1> psp_ntf_info = []() {

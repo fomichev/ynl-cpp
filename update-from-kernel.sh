@@ -15,7 +15,7 @@ cp -v ${KSRC}/tools/net/ynl/Makefile.deps	./
 sed -i 's@^UAPI_PATH:=.*@UAPI_PATH:=../@' Makefile.deps
 
 mkdir -p include/linux/
-for hdr in $(cat Makefile.deps | sed -n 's/.*,\([^,]*\.h\))/\1/p'); do
+for hdr in $(cat Makefile.deps | sed -n 's/.*,\([^,]*\.h\)).*/\1/p'); do
     cp -v  ${KSRC}/include/uapi/linux/$hdr	./linux/
 done
 

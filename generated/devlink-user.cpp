@@ -183,10 +183,11 @@ std::string_view devlink_sb_threshold_type_str(devlink_sb_threshold_type value)
 	return devlink_sb_threshold_type_strmap[value];
 }
 
-static constexpr std::array<std::string_view, 1 + 1> devlink_eswitch_mode_strmap = []() {
-	std::array<std::string_view, 1 + 1> arr{};
+static constexpr std::array<std::string_view, 2 + 1> devlink_eswitch_mode_strmap = []() {
+	std::array<std::string_view, 2 + 1> arr{};
 	arr[0] = "legacy";
 	arr[1] = "switchdev";
+	arr[2] = "switchdev-inactive";
 	return arr;
 } ();
 
@@ -1397,6 +1398,10 @@ static std::array<ynl_policy_attr,DEVLINK_ATTR_MAX + 1> devlink_policy = []() {
 	arr[DEVLINK_ATTR_RATE_TC_BWS].nest = &devlink_dl_rate_tc_bws_nest;
 	arr[DEVLINK_ATTR_HEALTH_REPORTER_BURST_PERIOD].name = "health-reporter-burst-period";
 	arr[DEVLINK_ATTR_HEALTH_REPORTER_BURST_PERIOD].type = YNL_PT_U64;
+	arr[DEVLINK_ATTR_PARAM_RESET_DEFAULT].name = "param-reset-default";
+	arr[DEVLINK_ATTR_PARAM_RESET_DEFAULT].type = YNL_PT_FLAG;
+	arr[DEVLINK_ATTR_INDEX].name = "index";
+	arr[DEVLINK_ATTR_INDEX].type = YNL_PT_UINT;
 	return arr;
 } ();
 
@@ -2560,6 +2565,11 @@ int devlink_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_RELOAD_FAILED) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -2598,6 +2608,9 @@ devlink_get(ynl_cpp::ynl_socket& ys, devlink_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 
 	rsp.reset(new devlink_get_rsp());
@@ -2661,6 +2674,11 @@ int devlink_port_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -2689,6 +2707,9 @@ devlink_port_get(ynl_cpp::ynl_socket& ys, devlink_port_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -2729,6 +2750,11 @@ int devlink_port_get_rsp_dump_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -2764,6 +2790,9 @@ devlink_port_get_dump(ynl_cpp::ynl_socket& ys, devlink_port_get_req_dump& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -2789,6 +2818,9 @@ int devlink_port_set(ynl_cpp::ynl_socket& ys, devlink_port_set_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -2831,6 +2863,11 @@ int devlink_port_new_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -2859,6 +2896,9 @@ devlink_port_new(ynl_cpp::ynl_socket& ys, devlink_port_new_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -2906,6 +2946,9 @@ int devlink_port_del(ynl_cpp::ynl_socket& ys, devlink_port_del_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -2934,6 +2977,9 @@ int devlink_port_split(ynl_cpp::ynl_socket& ys, devlink_port_split_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -2967,6 +3013,9 @@ int devlink_port_unsplit(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -3003,6 +3052,11 @@ int devlink_sb_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_SB_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3031,6 +3085,9 @@ devlink_sb_get(ynl_cpp::ynl_socket& ys, devlink_sb_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.sb_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_SB_INDEX, req.sb_index.value());
@@ -3074,6 +3131,9 @@ devlink_sb_get_dump(ynl_cpp::ynl_socket& ys, devlink_sb_get_req_dump& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -3106,6 +3166,11 @@ int devlink_sb_pool_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_SB_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3139,6 +3204,9 @@ devlink_sb_pool_get(ynl_cpp::ynl_socket& ys, devlink_sb_pool_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.sb_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_SB_INDEX, req.sb_index.value());
@@ -3186,6 +3254,9 @@ devlink_sb_pool_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -3211,6 +3282,9 @@ int devlink_sb_pool_set(ynl_cpp::ynl_socket& ys, devlink_sb_pool_set_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.sb_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_SB_INDEX, req.sb_index.value());
@@ -3256,6 +3330,11 @@ int devlink_sb_port_pool_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3295,6 +3374,9 @@ devlink_sb_port_pool_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -3345,6 +3427,9 @@ devlink_sb_port_pool_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -3371,6 +3456,9 @@ int devlink_sb_port_pool_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -3416,6 +3504,11 @@ int devlink_sb_tc_pool_bind_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3460,6 +3553,9 @@ devlink_sb_tc_pool_bind_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -3513,6 +3609,9 @@ devlink_sb_tc_pool_bind_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -3539,6 +3638,9 @@ int devlink_sb_tc_pool_bind_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -3585,6 +3687,9 @@ int devlink_sb_occ_snapshot(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.sb_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_SB_INDEX, req.sb_index.value());
 	}
@@ -3614,6 +3719,9 @@ int devlink_sb_occ_max_clear(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.sb_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_SB_INDEX, req.sb_index.value());
@@ -3650,6 +3758,11 @@ int devlink_eswitch_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_ESWITCH_MODE) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3689,6 +3802,9 @@ devlink_eswitch_get(ynl_cpp::ynl_socket& ys, devlink_eswitch_get_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	rsp.reset(new devlink_eswitch_get_rsp());
 	yrs.yarg.data = rsp.get();
@@ -3719,6 +3835,9 @@ int devlink_eswitch_set(ynl_cpp::ynl_socket& ys, devlink_eswitch_set_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.eswitch_mode.has_value()) {
 		ynl_attr_put_u16(nlh, DEVLINK_ATTR_ESWITCH_MODE, req.eswitch_mode.value());
@@ -3763,6 +3882,11 @@ int devlink_dpipe_table_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_DPIPE_TABLES) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3797,6 +3921,9 @@ devlink_dpipe_table_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.dpipe_table_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DPIPE_TABLE_NAME, req.dpipe_table_name.data());
@@ -3840,6 +3967,11 @@ int devlink_dpipe_entries_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_DPIPE_ENTRIES) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3874,6 +4006,9 @@ devlink_dpipe_entries_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.dpipe_table_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DPIPE_TABLE_NAME, req.dpipe_table_name.data());
@@ -3917,6 +4052,11 @@ int devlink_dpipe_headers_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_DPIPE_HEADERS) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3952,6 +4092,9 @@ devlink_dpipe_headers_get(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	rsp.reset(new devlink_dpipe_headers_get_rsp());
 	yrs.yarg.data = rsp.get();
@@ -3983,6 +4126,9 @@ int devlink_dpipe_table_counters_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.dpipe_table_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DPIPE_TABLE_NAME, req.dpipe_table_name.data());
@@ -4016,6 +4162,9 @@ int devlink_resource_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.resource_id.has_value()) {
 		ynl_attr_put_u64(nlh, DEVLINK_ATTR_RESOURCE_ID, req.resource_id.value());
@@ -4057,6 +4206,11 @@ int devlink_resource_dump_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_RESOURCE_LIST) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4090,6 +4244,9 @@ devlink_resource_dump(ynl_cpp::ynl_socket& ys, devlink_resource_dump_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 
 	rsp.reset(new devlink_resource_dump_rsp());
@@ -4128,6 +4285,11 @@ int devlink_reload_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_RELOAD_ACTIONS_PERFORMED) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4156,6 +4318,9 @@ devlink_reload(ynl_cpp::ynl_socket& ys, devlink_reload_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.reload_action.has_value()) {
 		ynl_attr_put_u8(nlh, DEVLINK_ATTR_RELOAD_ACTION, req.reload_action.value());
@@ -4209,6 +4374,11 @@ int devlink_param_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PARAM_NAME) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4237,6 +4407,9 @@ devlink_param_get(ynl_cpp::ynl_socket& ys, devlink_param_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.param_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_PARAM_NAME, req.param_name.data());
@@ -4281,6 +4454,9 @@ devlink_param_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -4307,6 +4483,9 @@ int devlink_param_set(ynl_cpp::ynl_socket& ys, devlink_param_set_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.param_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_PARAM_NAME, req.param_name.data());
 	}
@@ -4315,6 +4494,9 @@ int devlink_param_set(ynl_cpp::ynl_socket& ys, devlink_param_set_req& req)
 	}
 	if (req.param_value_cmode.has_value()) {
 		ynl_attr_put_u8(nlh, DEVLINK_ATTR_PARAM_VALUE_CMODE, req.param_value_cmode.value());
+	}
+	if (req.param_reset_default) {
+		ynl_attr_put(nlh, DEVLINK_ATTR_PARAM_RESET_DEFAULT, NULL, 0);
 	}
 
 	err = ynl_exec(ys, nlh, &yrs);
@@ -4348,6 +4530,11 @@ int devlink_region_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4381,6 +4568,9 @@ devlink_region_get(ynl_cpp::ynl_socket& ys, devlink_region_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -4428,6 +4618,9 @@ devlink_region_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -4460,6 +4653,11 @@ int devlink_region_new_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4498,6 +4696,9 @@ devlink_region_new(ynl_cpp::ynl_socket& ys, devlink_region_new_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -4538,6 +4739,9 @@ int devlink_region_del(ynl_cpp::ynl_socket& ys, devlink_region_del_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -4580,6 +4784,11 @@ int devlink_region_read_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4619,6 +4828,9 @@ devlink_region_read_dump(ynl_cpp::ynl_socket& ys, devlink_region_read_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -4670,6 +4882,11 @@ int devlink_port_param_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4699,6 +4916,9 @@ devlink_port_param_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -4761,6 +4981,9 @@ int devlink_port_param_set(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -4812,6 +5035,11 @@ int devlink_info_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_INFO_DRIVER_NAME) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4900,6 +5128,9 @@ devlink_info_get(ynl_cpp::ynl_socket& ys, devlink_info_get_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	rsp.reset(new devlink_info_get_rsp());
 	yrs.yarg.data = rsp.get();
@@ -4963,6 +5194,11 @@ int devlink_health_reporter_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -4997,6 +5233,9 @@ devlink_health_reporter_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -5044,6 +5283,9 @@ devlink_health_reporter_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -5073,6 +5315,9 @@ int devlink_health_reporter_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -5119,6 +5364,9 @@ int devlink_health_reporter_recover(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -5151,6 +5399,9 @@ int devlink_health_reporter_diagnose(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -5223,6 +5474,9 @@ devlink_health_reporter_dump_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -5256,6 +5510,9 @@ int devlink_health_reporter_dump_clear(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
 	}
@@ -5288,6 +5545,9 @@ int devlink_flash_update(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.flash_update_file_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_FLASH_UPDATE_FILE_NAME, req.flash_update_file_name.data());
@@ -5330,6 +5590,11 @@ int devlink_trap_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_TRAP_NAME) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -5358,6 +5623,9 @@ devlink_trap_get(ynl_cpp::ynl_socket& ys, devlink_trap_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_TRAP_NAME, req.trap_name.data());
@@ -5401,6 +5669,9 @@ devlink_trap_get_dump(ynl_cpp::ynl_socket& ys, devlink_trap_get_req_dump& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -5426,6 +5697,9 @@ int devlink_trap_set(ynl_cpp::ynl_socket& ys, devlink_trap_set_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_TRAP_NAME, req.trap_name.data());
@@ -5465,6 +5739,11 @@ int devlink_trap_group_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_TRAP_GROUP_NAME) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -5494,6 +5773,9 @@ devlink_trap_group_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_group_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_TRAP_GROUP_NAME, req.trap_group_name.data());
@@ -5538,6 +5820,9 @@ devlink_trap_group_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -5564,6 +5849,9 @@ int devlink_trap_group_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_group_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_TRAP_GROUP_NAME, req.trap_group_name.data());
@@ -5606,6 +5894,11 @@ int devlink_trap_policer_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_TRAP_POLICER_ID) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -5635,6 +5928,9 @@ devlink_trap_policer_get(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_policer_id.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_TRAP_POLICER_ID, req.trap_policer_id.value());
@@ -5679,6 +5975,9 @@ devlink_trap_policer_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -5705,6 +6004,9 @@ int devlink_trap_policer_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.trap_policer_id.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_TRAP_POLICER_ID, req.trap_policer_id.value());
@@ -5741,6 +6043,9 @@ int devlink_health_reporter_test(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -5780,6 +6085,11 @@ int devlink_rate_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_PORT_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -5813,6 +6123,9 @@ devlink_rate_get(ynl_cpp::ynl_socket& ys, devlink_rate_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());
@@ -5859,6 +6172,9 @@ devlink_rate_get_dump(ynl_cpp::ynl_socket& ys, devlink_rate_get_req_dump& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -5884,6 +6200,9 @@ int devlink_rate_set(ynl_cpp::ynl_socket& ys, devlink_rate_set_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.rate_node_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_RATE_NODE_NAME, req.rate_node_name.data());
@@ -5932,6 +6251,9 @@ int devlink_rate_new(ynl_cpp::ynl_socket& ys, devlink_rate_new_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.rate_node_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_RATE_NODE_NAME, req.rate_node_name.data());
 	}
@@ -5979,6 +6301,9 @@ int devlink_rate_del(ynl_cpp::ynl_socket& ys, devlink_rate_del_req& req)
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.rate_node_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_RATE_NODE_NAME, req.rate_node_name.data());
 	}
@@ -6014,6 +6339,11 @@ int devlink_linecard_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		} else if (type == DEVLINK_ATTR_LINECARD_INDEX) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -6042,6 +6372,9 @@ devlink_linecard_get(ynl_cpp::ynl_socket& ys, devlink_linecard_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.linecard_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_LINECARD_INDEX, req.linecard_index.value());
@@ -6086,6 +6419,9 @@ devlink_linecard_get_dump(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 
 	err = ynl_exec_dump_no_alloc(ys, nlh, &yds);
 	if (err < 0) {
@@ -6112,6 +6448,9 @@ int devlink_linecard_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.linecard_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_LINECARD_INDEX, req.linecard_index.value());
@@ -6151,6 +6490,11 @@ int devlink_selftests_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->dev_name.assign(ynl_attr_get_str(attr));
+		} else if (type == DEVLINK_ATTR_INDEX) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->index = (__u64)ynl_attr_get_uint(attr);
 		}
 	}
 
@@ -6174,6 +6518,9 @@ devlink_selftests_get(ynl_cpp::ynl_socket& ys, devlink_selftests_get_req& req)
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 
 	rsp.reset(new devlink_selftests_get_rsp());
@@ -6233,6 +6580,9 @@ int devlink_selftests_run(ynl_cpp::ynl_socket& ys,
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
 	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
+	}
 	if (req.selftests.has_value()) {
 		devlink_dl_selftest_id_put(nlh, DEVLINK_ATTR_SELFTESTS, req.selftests.value());
 	}
@@ -6262,6 +6612,9 @@ int devlink_notify_filter_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.dev_name.size() > 0) {
 		ynl_attr_put_str(nlh, DEVLINK_ATTR_DEV_NAME, req.dev_name.data());
+	}
+	if (req.index.has_value()) {
+		ynl_attr_put_uint(nlh, DEVLINK_ATTR_INDEX, req.index.value());
 	}
 	if (req.port_index.has_value()) {
 		ynl_attr_put_u32(nlh, DEVLINK_ATTR_PORT_INDEX, req.port_index.value());

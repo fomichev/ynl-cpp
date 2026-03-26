@@ -306,6 +306,8 @@ static std::array<ynl_policy_attr,ETHTOOL_A_PAUSE_STAT_MAX + 1> ethtool_pause_st
 	arr[ETHTOOL_A_PAUSE_STAT_TX_FRAMES].type = YNL_PT_U64;
 	arr[ETHTOOL_A_PAUSE_STAT_RX_FRAMES].name = "rx-frames";
 	arr[ETHTOOL_A_PAUSE_STAT_RX_FRAMES].type = YNL_PT_U64;
+	arr[ETHTOOL_A_PAUSE_STAT_TX_PAUSE_STORM_EVENTS].name = "tx-pause-storm-events";
+	arr[ETHTOOL_A_PAUSE_STAT_TX_PAUSE_STORM_EVENTS].type = YNL_PT_U64;
 	return arr;
 } ();
 
@@ -1197,6 +1199,10 @@ static std::array<ynl_policy_attr,ETHTOOL_A_COALESCE_MAX + 1> ethtool_coalesce_p
 	arr[ETHTOOL_A_COALESCE_TX_PROFILE].name = "tx-profile";
 	arr[ETHTOOL_A_COALESCE_TX_PROFILE].type = YNL_PT_NEST;
 	arr[ETHTOOL_A_COALESCE_TX_PROFILE].nest = &ethtool_profile_nest;
+	arr[ETHTOOL_A_COALESCE_RX_CQE_FRAMES].name = "rx-cqe-frames";
+	arr[ETHTOOL_A_COALESCE_RX_CQE_FRAMES].type = YNL_PT_U32;
+	arr[ETHTOOL_A_COALESCE_RX_CQE_NSECS].name = "rx-cqe-nsecs";
+	arr[ETHTOOL_A_COALESCE_RX_CQE_NSECS].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -1848,6 +1854,9 @@ int ethtool_pause_stat_put(struct nlmsghdr *nlh, unsigned int attr_type,
 	if (obj.rx_frames.has_value()) {
 		ynl_attr_put_u64(nlh, ETHTOOL_A_PAUSE_STAT_RX_FRAMES, obj.rx_frames.value());
 	}
+	if (obj.tx_pause_storm_events.has_value()) {
+		ynl_attr_put_u64(nlh, ETHTOOL_A_PAUSE_STAT_TX_PAUSE_STORM_EVENTS, obj.tx_pause_storm_events.value());
+	}
 	ynl_attr_nest_end(nlh, nest);
 
 	return 0;
@@ -1872,6 +1881,11 @@ int ethtool_pause_stat_parse(struct ynl_parse_arg *yarg,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->rx_frames = (__u64)ynl_attr_get_u64(attr);
+		} else if (type == ETHTOOL_A_PAUSE_STAT_TX_PAUSE_STORM_EVENTS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_pause_storm_events = (__u64)ynl_attr_get_u64(attr);
 		}
 	}
 
@@ -5186,6 +5200,16 @@ int ethtool_coalesce_get_rsp_parse(const struct nlmsghdr *nlh,
 			if (ethtool_profile_parse(&parg, attr)) {
 				return YNL_PARSE_CB_ERROR;
 			}
+		} else if (type == ETHTOOL_A_COALESCE_RX_CQE_FRAMES) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_cqe_frames = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == ETHTOOL_A_COALESCE_RX_CQE_NSECS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_cqe_nsecs = (__u32)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -5361,6 +5385,12 @@ int ethtool_coalesce_set(ynl_cpp::ynl_socket& ys,
 	}
 	if (req.tx_profile.has_value()) {
 		ethtool_profile_put(nlh, ETHTOOL_A_COALESCE_TX_PROFILE, req.tx_profile.value());
+	}
+	if (req.rx_cqe_frames.has_value()) {
+		ynl_attr_put_u32(nlh, ETHTOOL_A_COALESCE_RX_CQE_FRAMES, req.rx_cqe_frames.value());
+	}
+	if (req.rx_cqe_nsecs.has_value()) {
+		ynl_attr_put_u32(nlh, ETHTOOL_A_COALESCE_RX_CQE_NSECS, req.rx_cqe_nsecs.value());
 	}
 
 	err = ynl_exec(ys, nlh, &yrs);

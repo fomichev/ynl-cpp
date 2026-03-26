@@ -369,6 +369,8 @@ static std::array<ynl_policy_attr,DPLL_A_PIN_MAX + 1> dpll_pin_policy = []() {
 	arr[DPLL_A_PIN_REFERENCE_SYNC].nest = &dpll_reference_sync_nest;
 	arr[DPLL_A_PIN_PHASE_ADJUST_GRAN].name = "phase-adjust-gran";
 	arr[DPLL_A_PIN_PHASE_ADJUST_GRAN].type = YNL_PT_U32;
+	arr[DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET_PPT].name = "fractional-frequency-offset-ppt";
+	arr[DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET_PPT].type = YNL_PT_UINT;
 	return arr;
 } ();
 
@@ -776,6 +778,9 @@ int dpll_device_set(ynl_cpp::ynl_socket& ys, dpll_device_set_req& req)
 	if (req.id.has_value()) {
 		ynl_attr_put_u32(nlh, DPLL_A_ID, req.id.value());
 	}
+	if (req.mode.has_value()) {
+		ynl_attr_put_u32(nlh, DPLL_A_MODE, req.mode.value());
+	}
 	if (req.phase_offset_monitor.has_value()) {
 		ynl_attr_put_u32(nlh, DPLL_A_PHASE_OFFSET_MONITOR, req.phase_offset_monitor.value());
 	}
@@ -972,6 +977,11 @@ int dpll_pin_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->fractional_frequency_offset = (__s64)ynl_attr_get_sint(attr);
+		} else if (type == DPLL_A_PIN_FRACTIONAL_FREQUENCY_OFFSET_PPT) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->fractional_frequency_offset_ppt = (__s64)ynl_attr_get_sint(attr);
 		} else if (type == DPLL_A_PIN_ESYNC_FREQUENCY) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;

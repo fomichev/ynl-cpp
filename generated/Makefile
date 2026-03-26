@@ -14,10 +14,11 @@ include ../Makefile.deps
 TOOL:=../ynl-gen-cpp.py
 
 GENS_PATHS=$(shell grep -nrI --files-without-match \
-		'protocol: netlink' ../Documentation/netlink/specs/)
+		'protocol: netlink' ../Documentation/netlink/specs/*.yaml)
 GENS_PATHS+=$(wildcard ../Documentation/netlink/specs/rt-*.yaml)
 GENS_ALL=$(patsubst ../Documentation/netlink/specs/%.yaml,%,${GENS_PATHS})
-GENS=$(filter-out ,${GENS_ALL})
+GENS_SKIP=wireguard
+GENS=$(filter-out $(GENS_SKIP),${GENS_ALL})
 SRCS=$(patsubst %,%-user.cpp,${GENS})
 HDRS=$(patsubst %,%-user.hpp,${GENS})
 OBJS=$(patsubst %,%-user.cpp.o,${GENS})

@@ -129,6 +129,7 @@ struct dpll_device_get_ntf {
 /* DPLL_CMD_DEVICE_SET - do */
 struct dpll_device_set_req {
 	std::optional<__u32> id;
+	std::optional<enum dpll_mode> mode;
 	std::optional<enum dpll_feature_state> phase_offset_monitor;
 	std::optional<__u32> phase_offset_avg_factor;
 };
@@ -184,6 +185,7 @@ struct dpll_pin_get_rsp {
 	std::optional<__s32> phase_adjust_max;
 	std::optional<__s32> phase_adjust;
 	std::optional<__s64> fractional_frequency_offset;
+	std::optional<__s64> fractional_frequency_offset_ppt;
 	std::optional<__u64> esync_frequency;
 	std::vector<dpll_frequency_range> esync_frequency_supported;
 	std::optional<__u32> esync_pulse;

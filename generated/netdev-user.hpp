@@ -107,7 +107,9 @@ struct netdev_page_pool_get_rsp {
 
 /*
  * Get / dump information about Page Pools.
-(Only Page Pools associated with a net_device can be listed.)
+Only Page Pools associated by the driver with a net_device
+can be listed. ifindex will not be reported if the net_device
+no longer exists.
 
  */
 std::unique_ptr<netdev_page_pool_get_rsp>
@@ -252,6 +254,29 @@ struct netdev_qstats_get_rsp {
 	std::optional<__u64> rx_bytes;
 	std::optional<__u64> tx_packets;
 	std::optional<__u64> tx_bytes;
+	std::optional<__u64> rx_alloc_fail;
+	std::optional<__u64> rx_hw_drops;
+	std::optional<__u64> rx_hw_drop_overruns;
+	std::optional<__u64> rx_csum_complete;
+	std::optional<__u64> rx_csum_unnecessary;
+	std::optional<__u64> rx_csum_none;
+	std::optional<__u64> rx_csum_bad;
+	std::optional<__u64> rx_hw_gro_packets;
+	std::optional<__u64> rx_hw_gro_bytes;
+	std::optional<__u64> rx_hw_gro_wire_packets;
+	std::optional<__u64> rx_hw_gro_wire_bytes;
+	std::optional<__u64> rx_hw_drop_ratelimits;
+	std::optional<__u64> tx_hw_drops;
+	std::optional<__u64> tx_hw_drop_errors;
+	std::optional<__u64> tx_csum_none;
+	std::optional<__u64> tx_needs_csum;
+	std::optional<__u64> tx_hw_gso_packets;
+	std::optional<__u64> tx_hw_gso_bytes;
+	std::optional<__u64> tx_hw_gso_wire_packets;
+	std::optional<__u64> tx_hw_gso_wire_bytes;
+	std::optional<__u64> tx_hw_drop_ratelimits;
+	std::optional<__u64> tx_stop;
+	std::optional<__u64> tx_wake;
 };
 
 struct netdev_qstats_get_list {

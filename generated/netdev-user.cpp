@@ -1180,6 +1180,121 @@ int netdev_qstats_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->tx_bytes = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_ALLOC_FAIL) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_alloc_fail = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_DROPS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_drops = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_DROP_OVERRUNS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_drop_overruns = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_CSUM_COMPLETE) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_csum_complete = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_CSUM_UNNECESSARY) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_csum_unnecessary = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_CSUM_NONE) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_csum_none = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_CSUM_BAD) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_csum_bad = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_GRO_PACKETS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_gro_packets = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_GRO_BYTES) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_gro_bytes = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_GRO_WIRE_PACKETS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_gro_wire_packets = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_GRO_WIRE_BYTES) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_gro_wire_bytes = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_RX_HW_DROP_RATELIMITS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->rx_hw_drop_ratelimits = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_DROPS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_drops = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_DROP_ERRORS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_drop_errors = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_CSUM_NONE) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_csum_none = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_NEEDS_CSUM) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_needs_csum = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_GSO_PACKETS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_gso_packets = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_GSO_BYTES) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_gso_bytes = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_GSO_WIRE_PACKETS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_gso_wire_packets = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_GSO_WIRE_BYTES) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_gso_wire_bytes = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_HW_DROP_RATELIMITS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_hw_drop_ratelimits = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_STOP) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_stop = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == NETDEV_A_QSTATS_TX_WAKE) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_wake = (__u64)ynl_attr_get_uint(attr);
 		}
 	}
 

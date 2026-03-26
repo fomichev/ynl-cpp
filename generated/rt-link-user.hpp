@@ -202,7 +202,7 @@ struct rt_link_linkinfo_gre6_attrs {
 
 struct rt_link_linkinfo_geneve_attrs {
 	std::optional<__u32> id;
-	std::vector<__u8> remote;
+	std::optional<__u32> remote /* big-endian */;
 	std::optional<__u8> ttl;
 	std::optional<__u8> tos;
 	std::optional<__u16> port /* big-endian */;
@@ -216,6 +216,18 @@ struct rt_link_linkinfo_geneve_attrs {
 	std::optional<__u8> df;
 	bool inner_proto_inherit{};
 	std::optional<struct ifla_geneve_port_range> port_range;
+	bool gro_hint{};
+};
+
+struct rt_link_linkinfo_hsr_attrs {
+	std::optional<__u32> slave1;
+	std::optional<__u32> slave2;
+	std::optional<__u8> multicast_spec;
+	std::vector<__u8> supervision_addr;
+	std::optional<__u16> seq_nr;
+	std::optional<__u8> version;
+	std::optional<__u8> protocol;
+	std::optional<__u32> interlink;
 };
 
 struct rt_link_linkinfo_iptun_attrs {
@@ -230,7 +242,7 @@ struct rt_link_linkinfo_iptun_attrs {
 	std::optional<__u8> proto;
 	std::optional<__u8> pmtudisc;
 	std::vector<__u8> _6rd_prefix;
-	std::vector<__u8> _6rd_relay_prefix;
+	std::optional<__u32> _6rd_relay_prefix /* big-endian */;
 	std::optional<__u16> _6rd_prefixlen;
 	std::optional<__u16> _6rd_relay_prefixlen;
 	std::optional<__u16> encap_type;
@@ -481,6 +493,7 @@ struct rt_link_linkinfo_data_msg {
 	std::optional<rt_link_linkinfo_gre_attrs> gretap;
 	std::optional<rt_link_linkinfo_gre6_attrs> ip6gre;
 	std::optional<rt_link_linkinfo_geneve_attrs> geneve;
+	std::optional<rt_link_linkinfo_hsr_attrs> hsr;
 	std::optional<rt_link_linkinfo_iptun_attrs> ipip;
 	std::optional<rt_link_linkinfo_ip6tnl_attrs> ip6tnl;
 	std::optional<rt_link_linkinfo_iptun_attrs> sit;

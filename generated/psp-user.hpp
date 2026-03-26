@@ -148,5 +148,31 @@ struct psp_tx_assoc_rsp {
 std::unique_ptr<psp_tx_assoc_rsp>
 psp_tx_assoc(ynl_cpp::ynl_socket& ys, psp_tx_assoc_req& req);
 
+/* ============== PSP_CMD_GET_STATS ============== */
+/* PSP_CMD_GET_STATS - do */
+struct psp_get_stats_req {
+	std::optional<__u32> dev_id;
+};
+
+struct psp_get_stats_rsp {
+	std::optional<__u32> dev_id;
+	std::optional<__u64> key_rotations;
+	std::optional<__u64> stale_events;
+};
+
+/*
+ * Get device statistics.
+ */
+std::unique_ptr<psp_get_stats_rsp>
+psp_get_stats(ynl_cpp::ynl_socket& ys, psp_get_stats_req& req);
+
+/* PSP_CMD_GET_STATS - dump */
+struct psp_get_stats_list {
+	std::list<psp_get_stats_rsp> objs;
+};
+
+std::unique_ptr<psp_get_stats_list>
+psp_get_stats_dump(ynl_cpp::ynl_socket& ys);
+
 } //namespace ynl_cpp
 #endif /* _LINUX_PSP_GEN_H */

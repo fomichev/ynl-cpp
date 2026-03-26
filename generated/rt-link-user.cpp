@@ -747,7 +747,7 @@ static std::array<ynl_policy_attr,IFLA_GENEVE_MAX + 1> rt_link_linkinfo_geneve_a
 	arr[IFLA_GENEVE_ID].name = "id";
 	arr[IFLA_GENEVE_ID].type = YNL_PT_U32;
 	arr[IFLA_GENEVE_REMOTE].name = "remote";
-	arr[IFLA_GENEVE_REMOTE].type = YNL_PT_BINARY;
+	arr[IFLA_GENEVE_REMOTE].type = YNL_PT_U32;
 	arr[IFLA_GENEVE_TTL].name = "ttl";
 	arr[IFLA_GENEVE_TTL].type = YNL_PT_U8;
 	arr[IFLA_GENEVE_TOS].name = "tos";
@@ -774,12 +774,40 @@ static std::array<ynl_policy_attr,IFLA_GENEVE_MAX + 1> rt_link_linkinfo_geneve_a
 	arr[IFLA_GENEVE_INNER_PROTO_INHERIT].type = YNL_PT_FLAG;
 	arr[IFLA_GENEVE_PORT_RANGE].name = "port-range";
 	arr[IFLA_GENEVE_PORT_RANGE].type = YNL_PT_BINARY;
+	arr[IFLA_GENEVE_GRO_HINT].name = "gro-hint";
+	arr[IFLA_GENEVE_GRO_HINT].type = YNL_PT_FLAG;
 	return arr;
 } ();
 
 struct ynl_policy_nest rt_link_linkinfo_geneve_attrs_nest = {
 	.max_attr = static_cast<unsigned int>(IFLA_GENEVE_MAX),
 	.table = rt_link_linkinfo_geneve_attrs_policy.data(),
+};
+
+static std::array<ynl_policy_attr,IFLA_HSR_MAX + 1> rt_link_linkinfo_hsr_attrs_policy = []() {
+	std::array<ynl_policy_attr,IFLA_HSR_MAX + 1> arr{};
+	arr[IFLA_HSR_SLAVE1].name = "slave1";
+	arr[IFLA_HSR_SLAVE1].type = YNL_PT_U32;
+	arr[IFLA_HSR_SLAVE2].name = "slave2";
+	arr[IFLA_HSR_SLAVE2].type = YNL_PT_U32;
+	arr[IFLA_HSR_MULTICAST_SPEC].name = "multicast-spec";
+	arr[IFLA_HSR_MULTICAST_SPEC].type = YNL_PT_U8;
+	arr[IFLA_HSR_SUPERVISION_ADDR].name = "supervision-addr";
+	arr[IFLA_HSR_SUPERVISION_ADDR].type = YNL_PT_BINARY;
+	arr[IFLA_HSR_SEQ_NR].name = "seq-nr";
+	arr[IFLA_HSR_SEQ_NR].type = YNL_PT_U16;
+	arr[IFLA_HSR_VERSION].name = "version";
+	arr[IFLA_HSR_VERSION].type = YNL_PT_U8;
+	arr[IFLA_HSR_PROTOCOL].name = "protocol";
+	arr[IFLA_HSR_PROTOCOL].type = YNL_PT_U8;
+	arr[IFLA_HSR_INTERLINK].name = "interlink";
+	arr[IFLA_HSR_INTERLINK].type = YNL_PT_U32;
+	return arr;
+} ();
+
+struct ynl_policy_nest rt_link_linkinfo_hsr_attrs_nest = {
+	.max_attr = static_cast<unsigned int>(IFLA_HSR_MAX),
+	.table = rt_link_linkinfo_hsr_attrs_policy.data(),
 };
 
 static std::array<ynl_policy_attr,IFLA_IPTUN_MAX + 1> rt_link_linkinfo_iptun_attrs_policy = []() {
@@ -807,7 +835,7 @@ static std::array<ynl_policy_attr,IFLA_IPTUN_MAX + 1> rt_link_linkinfo_iptun_att
 	arr[IFLA_IPTUN_6RD_PREFIX].name = "6rd-prefix";
 	arr[IFLA_IPTUN_6RD_PREFIX].type = YNL_PT_BINARY;
 	arr[IFLA_IPTUN_6RD_RELAY_PREFIX].name = "6rd-relay-prefix";
-	arr[IFLA_IPTUN_6RD_RELAY_PREFIX].type = YNL_PT_BINARY;
+	arr[IFLA_IPTUN_6RD_RELAY_PREFIX].type = YNL_PT_U32;
 	arr[IFLA_IPTUN_6RD_PREFIXLEN].name = "6rd-prefixlen";
 	arr[IFLA_IPTUN_6RD_PREFIXLEN].type = YNL_PT_U16;
 	arr[IFLA_IPTUN_6RD_RELAY_PREFIXLEN].name = "6rd-relay-prefixlen";
@@ -1393,8 +1421,8 @@ struct ynl_policy_nest rt_link_vfinfo_list_attrs_nest = {
 	.table = rt_link_vfinfo_list_attrs_policy.data(),
 };
 
-static std::array<ynl_policy_attr,17> rt_link_linkinfo_data_msg_policy = []() {
-	std::array<ynl_policy_attr,17> arr{};
+static std::array<ynl_policy_attr,18> rt_link_linkinfo_data_msg_policy = []() {
+	std::array<ynl_policy_attr,18> arr{};
 	arr[0].type = YNL_PT_SUBMSG;
 	arr[0].name = "bond";
 	arr[0].nest = &rt_link_linkinfo_bond_attrs_nest;
@@ -1417,40 +1445,43 @@ static std::array<ynl_policy_attr,17> rt_link_linkinfo_data_msg_policy = []() {
 	arr[6].name = "geneve";
 	arr[6].nest = &rt_link_linkinfo_geneve_attrs_nest;
 	arr[7].type = YNL_PT_SUBMSG;
-	arr[7].name = "ipip";
-	arr[7].nest = &rt_link_linkinfo_iptun_attrs_nest;
+	arr[7].name = "hsr";
+	arr[7].nest = &rt_link_linkinfo_hsr_attrs_nest;
 	arr[8].type = YNL_PT_SUBMSG;
-	arr[8].name = "ip6tnl";
-	arr[8].nest = &rt_link_linkinfo_ip6tnl_attrs_nest;
+	arr[8].name = "ipip";
+	arr[8].nest = &rt_link_linkinfo_iptun_attrs_nest;
 	arr[9].type = YNL_PT_SUBMSG;
-	arr[9].name = "sit";
-	arr[9].nest = &rt_link_linkinfo_iptun_attrs_nest;
+	arr[9].name = "ip6tnl";
+	arr[9].nest = &rt_link_linkinfo_ip6tnl_attrs_nest;
 	arr[10].type = YNL_PT_SUBMSG;
-	arr[10].name = "tun";
-	arr[10].nest = &rt_link_linkinfo_tun_attrs_nest;
+	arr[10].name = "sit";
+	arr[10].nest = &rt_link_linkinfo_iptun_attrs_nest;
 	arr[11].type = YNL_PT_SUBMSG;
-	arr[11].name = "vlan";
-	arr[11].nest = &rt_link_linkinfo_vlan_attrs_nest;
+	arr[11].name = "tun";
+	arr[11].nest = &rt_link_linkinfo_tun_attrs_nest;
 	arr[12].type = YNL_PT_SUBMSG;
-	arr[12].name = "vrf";
-	arr[12].nest = &rt_link_linkinfo_vrf_attrs_nest;
+	arr[12].name = "vlan";
+	arr[12].nest = &rt_link_linkinfo_vlan_attrs_nest;
 	arr[13].type = YNL_PT_SUBMSG;
-	arr[13].name = "vti";
-	arr[13].nest = &rt_link_linkinfo_vti_attrs_nest;
+	arr[13].name = "vrf";
+	arr[13].nest = &rt_link_linkinfo_vrf_attrs_nest;
 	arr[14].type = YNL_PT_SUBMSG;
-	arr[14].name = "vti6";
-	arr[14].nest = &rt_link_linkinfo_vti6_attrs_nest;
+	arr[14].name = "vti";
+	arr[14].nest = &rt_link_linkinfo_vti_attrs_nest;
 	arr[15].type = YNL_PT_SUBMSG;
-	arr[15].name = "netkit";
-	arr[15].nest = &rt_link_linkinfo_netkit_attrs_nest;
+	arr[15].name = "vti6";
+	arr[15].nest = &rt_link_linkinfo_vti6_attrs_nest;
 	arr[16].type = YNL_PT_SUBMSG;
-	arr[16].name = "ovpn";
-	arr[16].nest = &rt_link_linkinfo_ovpn_attrs_nest;
+	arr[16].name = "netkit";
+	arr[16].nest = &rt_link_linkinfo_netkit_attrs_nest;
+	arr[17].type = YNL_PT_SUBMSG;
+	arr[17].name = "ovpn";
+	arr[17].nest = &rt_link_linkinfo_ovpn_attrs_nest;
 	return arr;
 } ();
 
 struct ynl_policy_nest rt_link_linkinfo_data_msg_nest = {
-	.max_attr = 17,
+	.max_attr = 18,
 	.table = rt_link_linkinfo_data_msg_policy.data(),
 };
 
@@ -2903,8 +2934,8 @@ int rt_link_linkinfo_geneve_attrs_put(struct nlmsghdr *nlh,
 	if (obj.id.has_value()) {
 		ynl_attr_put_u32(nlh, IFLA_GENEVE_ID, obj.id.value());
 	}
-	if (obj.remote.size() > 0) {
-		ynl_attr_put(nlh, IFLA_GENEVE_REMOTE, obj.remote.data(), obj.remote.size());
+	if (obj.remote.has_value()) {
+		ynl_attr_put_u32(nlh, IFLA_GENEVE_REMOTE, obj.remote.value());
 	}
 	if (obj.ttl.has_value()) {
 		ynl_attr_put_u8(nlh, IFLA_GENEVE_TTL, obj.ttl.value());
@@ -2945,6 +2976,9 @@ int rt_link_linkinfo_geneve_attrs_put(struct nlmsghdr *nlh,
 	if (obj.port_range) {
 		ynl_attr_put(nlh, IFLA_GENEVE_PORT_RANGE, &*obj.port_range, sizeof(struct ifla_geneve_port_range));
 	}
+	if (obj.gro_hint) {
+		ynl_attr_put(nlh, IFLA_GENEVE_GRO_HINT, NULL, 0);
+	}
 	ynl_attr_nest_end(nlh, nest);
 
 	return 0;
@@ -2968,9 +3002,7 @@ int rt_link_linkinfo_geneve_attrs_parse(struct ynl_parse_arg *yarg,
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
 			}
-			unsigned int len = ynl_attr_data_len(attr);
-			__u8 *data = (__u8*)ynl_attr_data(attr);
-			dst->remote.assign(data, data + len);
+			dst->remote = (__u32)ynl_attr_get_u32(attr);
 		} else if (type == IFLA_GENEVE_TTL) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -3039,6 +3071,103 @@ int rt_link_linkinfo_geneve_attrs_parse(struct ynl_parse_arg *yarg,
 			unsigned int struct_sz = sizeof(struct ifla_geneve_port_range);
 			dst->port_range.emplace();
 			memcpy(&*dst->port_range, ynl_attr_data(attr), std::min(struct_sz, len));
+		} else if (type == IFLA_GENEVE_GRO_HINT) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int rt_link_linkinfo_hsr_attrs_put(struct nlmsghdr *nlh,
+				   unsigned int attr_type,
+				   const rt_link_linkinfo_hsr_attrs&  obj)
+{
+	struct nlattr *nest;
+
+	nest = ynl_attr_nest_start(nlh, attr_type);
+	if (obj.slave1.has_value()) {
+		ynl_attr_put_u32(nlh, IFLA_HSR_SLAVE1, obj.slave1.value());
+	}
+	if (obj.slave2.has_value()) {
+		ynl_attr_put_u32(nlh, IFLA_HSR_SLAVE2, obj.slave2.value());
+	}
+	if (obj.multicast_spec.has_value()) {
+		ynl_attr_put_u8(nlh, IFLA_HSR_MULTICAST_SPEC, obj.multicast_spec.value());
+	}
+	if (obj.supervision_addr.size() > 0) {
+		ynl_attr_put(nlh, IFLA_HSR_SUPERVISION_ADDR, obj.supervision_addr.data(), obj.supervision_addr.size());
+	}
+	if (obj.seq_nr.has_value()) {
+		ynl_attr_put_u16(nlh, IFLA_HSR_SEQ_NR, obj.seq_nr.value());
+	}
+	if (obj.version.has_value()) {
+		ynl_attr_put_u8(nlh, IFLA_HSR_VERSION, obj.version.value());
+	}
+	if (obj.protocol.has_value()) {
+		ynl_attr_put_u8(nlh, IFLA_HSR_PROTOCOL, obj.protocol.value());
+	}
+	if (obj.interlink.has_value()) {
+		ynl_attr_put_u32(nlh, IFLA_HSR_INTERLINK, obj.interlink.value());
+	}
+	ynl_attr_nest_end(nlh, nest);
+
+	return 0;
+}
+
+int rt_link_linkinfo_hsr_attrs_parse(struct ynl_parse_arg *yarg,
+				     const struct nlattr *nested)
+{
+	rt_link_linkinfo_hsr_attrs *dst = (rt_link_linkinfo_hsr_attrs *)yarg->data;
+	const struct nlattr *attr;
+
+	ynl_attr_for_each_nested(attr, nested) {
+		unsigned int type = ynl_attr_type(attr);
+
+		if (type == IFLA_HSR_SLAVE1) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->slave1 = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == IFLA_HSR_SLAVE2) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->slave2 = (__u32)ynl_attr_get_u32(attr);
+		} else if (type == IFLA_HSR_MULTICAST_SPEC) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->multicast_spec = (__u8)ynl_attr_get_u8(attr);
+		} else if (type == IFLA_HSR_SUPERVISION_ADDR) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			unsigned int len = ynl_attr_data_len(attr);
+			__u8 *data = (__u8*)ynl_attr_data(attr);
+			dst->supervision_addr.assign(data, data + len);
+		} else if (type == IFLA_HSR_SEQ_NR) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->seq_nr = (__u16)ynl_attr_get_u16(attr);
+		} else if (type == IFLA_HSR_VERSION) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->version = (__u8)ynl_attr_get_u8(attr);
+		} else if (type == IFLA_HSR_PROTOCOL) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->protocol = (__u8)ynl_attr_get_u8(attr);
+		} else if (type == IFLA_HSR_INTERLINK) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->interlink = (__u32)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -3085,8 +3214,8 @@ int rt_link_linkinfo_iptun_attrs_put(struct nlmsghdr *nlh,
 	if (obj._6rd_prefix.size() > 0) {
 		ynl_attr_put(nlh, IFLA_IPTUN_6RD_PREFIX, obj._6rd_prefix.data(), obj._6rd_prefix.size());
 	}
-	if (obj._6rd_relay_prefix.size() > 0) {
-		ynl_attr_put(nlh, IFLA_IPTUN_6RD_RELAY_PREFIX, obj._6rd_relay_prefix.data(), obj._6rd_relay_prefix.size());
+	if (obj._6rd_relay_prefix.has_value()) {
+		ynl_attr_put_u32(nlh, IFLA_IPTUN_6RD_RELAY_PREFIX, obj._6rd_relay_prefix.value());
 	}
 	if (obj._6rd_prefixlen.has_value()) {
 		ynl_attr_put_u16(nlh, IFLA_IPTUN_6RD_PREFIXLEN, obj._6rd_prefixlen.value());
@@ -3191,9 +3320,7 @@ int rt_link_linkinfo_iptun_attrs_parse(struct ynl_parse_arg *yarg,
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
 			}
-			unsigned int len = ynl_attr_data_len(attr);
-			__u8 *data = (__u8*)ynl_attr_data(attr);
-			dst->_6rd_relay_prefix.assign(data, data + len);
+			dst->_6rd_relay_prefix = (__u32)ynl_attr_get_u32(attr);
 		} else if (type == IFLA_IPTUN_6RD_PREFIXLEN) {
 			if (ynl_attr_validate(yarg, attr)) {
 				return YNL_PARSE_CB_ERROR;
@@ -5356,6 +5483,9 @@ int rt_link_linkinfo_data_msg_put(struct nlmsghdr *nlh, unsigned int attr_type,
 	if (obj.geneve.has_value()) {
 		rt_link_linkinfo_geneve_attrs_put(nlh, IFLA_INFO_DATA, obj.geneve.value());
 	}
+	if (obj.hsr.has_value()) {
+		rt_link_linkinfo_hsr_attrs_put(nlh, IFLA_INFO_DATA, obj.hsr.value());
+	}
 	if (obj.ipip.has_value()) {
 		rt_link_linkinfo_iptun_attrs_put(nlh, IFLA_INFO_DATA, obj.ipip.value());
 	}
@@ -5440,6 +5570,12 @@ int rt_link_linkinfo_data_msg_parse(struct ynl_parse_arg *yarg,
 		parg.rsp_policy = &rt_link_linkinfo_geneve_attrs_nest;
 		parg.data = &dst->geneve.emplace();
 		if (rt_link_linkinfo_geneve_attrs_parse(&parg, attr)) {
+			return YNL_PARSE_CB_ERROR;
+		}
+	} else if (sel == "hsr") {
+		parg.rsp_policy = &rt_link_linkinfo_hsr_attrs_nest;
+		parg.data = &dst->hsr.emplace();
+		if (rt_link_linkinfo_hsr_attrs_parse(&parg, attr)) {
 			return YNL_PARSE_CB_ERROR;
 		}
 	} else if (sel == "ipip") {

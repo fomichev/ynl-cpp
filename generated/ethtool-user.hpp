@@ -53,6 +53,7 @@ struct ethtool_header {
 struct ethtool_pause_stat {
 	std::optional<__u64> tx_frames;
 	std::optional<__u64> rx_frames;
+	std::optional<__u64> tx_pause_storm_events;
 };
 
 struct ethtool_ts_stat {
@@ -845,6 +846,8 @@ struct ethtool_coalesce_get_rsp {
 	std::optional<__u32> tx_aggr_time_usecs;
 	std::optional<ethtool_profile> rx_profile;
 	std::optional<ethtool_profile> tx_profile;
+	std::optional<__u32> rx_cqe_frames;
+	std::optional<__u32> rx_cqe_nsecs;
 };
 
 /*
@@ -908,6 +911,8 @@ struct ethtool_coalesce_set_req {
 	std::optional<__u32> tx_aggr_time_usecs;
 	std::optional<ethtool_profile> rx_profile;
 	std::optional<ethtool_profile> tx_profile;
+	std::optional<__u32> rx_cqe_frames;
+	std::optional<__u32> rx_cqe_nsecs;
 };
 
 /*

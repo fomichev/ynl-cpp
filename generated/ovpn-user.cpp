@@ -14,8 +14,8 @@
 namespace ynl_cpp {
 
 /* Enums */
-static constexpr std::array<std::string_view, OVPN_CMD_KEY_DEL + 1> ovpn_op_strmap = []() {
-	std::array<std::string_view, OVPN_CMD_KEY_DEL + 1> arr{};
+static constexpr std::array<std::string_view, OVPN_CMD_PEER_FLOAT_NTF + 1> ovpn_op_strmap = []() {
+	std::array<std::string_view, OVPN_CMD_PEER_FLOAT_NTF + 1> arr{};
 	arr[OVPN_CMD_PEER_NEW] = "peer-new";
 	arr[OVPN_CMD_PEER_SET] = "peer-set";
 	arr[OVPN_CMD_PEER_GET] = "peer-get";
@@ -26,6 +26,7 @@ static constexpr std::array<std::string_view, OVPN_CMD_KEY_DEL + 1> ovpn_op_strm
 	arr[OVPN_CMD_KEY_SWAP] = "key-swap";
 	arr[OVPN_CMD_KEY_SWAP_NTF] = "key-swap-ntf";
 	arr[OVPN_CMD_KEY_DEL] = "key-del";
+	arr[OVPN_CMD_PEER_FLOAT_NTF] = "peer-float-ntf";
 	return arr;
 } ();
 
@@ -135,6 +136,8 @@ static std::array<ynl_policy_attr,OVPN_A_PEER_MAX + 1> ovpn_peer_policy = []() {
 	arr[OVPN_A_PEER_LINK_RX_PACKETS].type = YNL_PT_UINT;
 	arr[OVPN_A_PEER_LINK_TX_PACKETS].name = "link-tx-packets";
 	arr[OVPN_A_PEER_LINK_TX_PACKETS].type = YNL_PT_UINT;
+	arr[OVPN_A_PEER_TX_ID].name = "tx-id";
+	arr[OVPN_A_PEER_TX_ID].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -365,6 +368,9 @@ int ovpn_peer_put(struct nlmsghdr *nlh, unsigned int attr_type,
 	if (obj.link_tx_packets.has_value()) {
 		ynl_attr_put_uint(nlh, OVPN_A_PEER_LINK_TX_PACKETS, obj.link_tx_packets.value());
 	}
+	if (obj.tx_id.has_value()) {
+		ynl_attr_put_u32(nlh, OVPN_A_PEER_TX_ID, obj.tx_id.value());
+	}
 	ynl_attr_nest_end(nlh, nest);
 
 	return 0;
@@ -499,6 +505,11 @@ int ovpn_peer_parse(struct ynl_parse_arg *yarg, const struct nlattr *nested)
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->link_tx_packets = (__u64)ynl_attr_get_uint(attr);
+		} else if (type == OVPN_A_PEER_TX_ID) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->tx_id = (__u32)ynl_attr_get_u32(attr);
 		}
 	}
 
@@ -963,8 +974,8 @@ int ovpn_key_del(ynl_cpp::ynl_socket& ys, ovpn_key_del_req& req)
 	return 0;
 }
 
-static constexpr std::array<ynl_ntf_info, OVPN_CMD_KEY_SWAP_NTF + 1> ovpn_ntf_info = []() {
-	std::array<ynl_ntf_info, OVPN_CMD_KEY_SWAP_NTF + 1> arr{};
+static constexpr std::array<ynl_ntf_info, OVPN_CMD_PEER_FLOAT_NTF + 1> ovpn_ntf_info = []() {
+	std::array<ynl_ntf_info, OVPN_CMD_PEER_FLOAT_NTF + 1> arr{};
 	arr[OVPN_CMD_PEER_DEL_NTF].policy		= &ovpn_nest;
 	arr[OVPN_CMD_PEER_DEL_NTF].cb		= ovpn_peer_get_rsp_parse;
 	arr[OVPN_CMD_PEER_DEL_NTF].alloc_sz	= sizeof(ovpn_peer_get_ntf);
@@ -973,6 +984,10 @@ static constexpr std::array<ynl_ntf_info, OVPN_CMD_KEY_SWAP_NTF + 1> ovpn_ntf_in
 	arr[OVPN_CMD_KEY_SWAP_NTF].cb		= ovpn_key_get_rsp_parse;
 	arr[OVPN_CMD_KEY_SWAP_NTF].alloc_sz	= sizeof(ovpn_key_get_ntf);
 	arr[OVPN_CMD_KEY_SWAP_NTF].free		= ovpn_key_get_ntf_free;
+	arr[OVPN_CMD_PEER_FLOAT_NTF].policy		= &ovpn_nest;
+	arr[OVPN_CMD_PEER_FLOAT_NTF].cb		= ovpn_peer_get_rsp_parse;
+	arr[OVPN_CMD_PEER_FLOAT_NTF].alloc_sz	= sizeof(ovpn_peer_get_ntf);
+	arr[OVPN_CMD_PEER_FLOAT_NTF].free		= ovpn_peer_get_ntf_free;
 	return arr;
 } ();
 

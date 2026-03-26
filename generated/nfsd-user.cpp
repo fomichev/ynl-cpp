@@ -115,6 +115,8 @@ static std::array<ynl_policy_attr,NFSD_A_SERVER_MAX + 1> nfsd_server_policy = []
 	arr[NFSD_A_SERVER_LEASETIME].type = YNL_PT_U32;
 	arr[NFSD_A_SERVER_SCOPE].name = "scope";
 	arr[NFSD_A_SERVER_SCOPE].type  = YNL_PT_NUL_STR;
+	arr[NFSD_A_SERVER_MIN_THREADS].name = "min-threads";
+	arr[NFSD_A_SERVER_MIN_THREADS].type = YNL_PT_U32;
 	return arr;
 } ();
 
@@ -405,6 +407,9 @@ int nfsd_threads_set(ynl_cpp::ynl_socket& ys, nfsd_threads_set_req& req)
 	if (req.scope.size() > 0) {
 		ynl_attr_put_str(nlh, NFSD_A_SERVER_SCOPE, req.scope.data());
 	}
+	if (req.min_threads.has_value()) {
+		ynl_attr_put_u32(nlh, NFSD_A_SERVER_MIN_THREADS, req.min_threads.value());
+	}
 
 	err = ynl_exec(ys, nlh, &yrs);
 	if (err < 0) {
@@ -450,6 +455,11 @@ int nfsd_threads_get_rsp_parse(const struct nlmsghdr *nlh,
 				return YNL_PARSE_CB_ERROR;
 			}
 			dst->scope.assign(ynl_attr_get_str(attr));
+		} else if (type == NFSD_A_SERVER_MIN_THREADS) {
+			if (ynl_attr_validate(yarg, attr)) {
+				return YNL_PARSE_CB_ERROR;
+			}
+			dst->min_threads = (__u32)ynl_attr_get_u32(attr);
 		}
 	}
 

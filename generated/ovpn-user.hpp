@@ -56,6 +56,7 @@ struct ovpn_peer {
 	std::optional<__u64> link_tx_bytes;
 	std::optional<__u64> link_rx_packets;
 	std::optional<__u64> link_tx_packets;
+	std::optional<__u32> tx_id;
 };
 
 struct ovpn_keydir {
